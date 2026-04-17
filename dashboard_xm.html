@@ -865,16 +865,22 @@ function editProyecto(i){
   document.getElementById('ep-fecha-mensualidad').value=p.fechaMensualidad||'';
   openModal('m-edit');
 
+if(!proyectos[i].hitos){
+  proyectos[i].hitos = crearHitos(proyectos[i]);
+}
+
+pintarHitos(proyectos[i]);
+  
 function crearHitos(p){
   let arr = [];
 
-  if(!p.meses || !p.inicio){
-    console.log("ERROR: faltan datos para generar hitos", p);
-    return arr;
-  }
+  if(!p.meses || !p.inicio) return arr;
+
+  // 🔥 convertir fecha a formato correcto
+  let inicio = convertirFecha(p.inicio);
 
   for(let i=0;i<p.meses;i++){
-    let fecha = addMonths(p.inicio,i).slice(0,7);
+    let fecha = addMonths(inicio, i).slice(0,7);
 
     arr.push({
       mes: fecha,
@@ -884,6 +890,17 @@ function crearHitos(p){
   }
 
   return arr;
+}
+
+function convertirFecha(f){
+  if(!f) return "";
+
+  if(f.includes("/")){
+    let [d,m,y] = f.split("/");
+    return `${y}-${m}-${d}`;
+  }
+
+  return f;
 }
   
 }
