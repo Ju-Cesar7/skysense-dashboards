@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skysense · Control XM — P$250M Credit Facility</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#0A0F1E;--sur:#111827;--sur2:#1a2235;--brd:#1E2D45;
+  --acc:#10B981;--acc2:#3B82F6;--acc3:#EF4444;--acc4:#F59E0B;--acc5:#8B5CF6;
+  --txt:#F1F5F9;--dim:#64748B;--mid:#94A3B8;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;}
+/* HEADER */
+.hdr{background:#0D1624;border-bottom:1px solid var(--brd);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
+.hdr-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.hdr-logo img{width:32px;height:32px;border-radius:8px;background:#fff;padding:2px;object-fit:contain;}
+.hdr-name{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--txt);}
+.hdr-sub{font-size:10px;color:var(--dim);}
+.hdr-right{display:flex;align-items:center;gap:8px;}
+.hbadge{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);padding:4px 12px;border-radius:20px;font-size:10px;color:var(--acc);font-family:'DM Mono',monospace;letter-spacing:.5px;}
+.hdate{font-size:10px;color:var(--mid);border:1px solid var(--brd);padding:4px 12px;border-radius:20px;font-family:'DM Mono',monospace;}
+/* ABAR */
+.abar{padding:10px 32px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--brd);background:var(--sur);}
+.sp{flex:1;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .18s;text-decoration:none;white-space:nowrap;}
+.btn svg{width:13px;height:13px;flex-shrink:0;}
+.btn-green{background:var(--acc);color:#fff;}
+.btn-green:hover{background:#059669;transform:translateY(-1px);box-shadow:0 4px 16px rgba(16,185,129,.3);}
+.btn-blue{background:var(--acc2);color:#fff;}
+.btn-blue:hover{background:#2563EB;transform:translateY(-1px);}
+.btn-outline{background:transparent;color:var(--txt);border:1px solid var(--brd);}
+.btn-outline:hover{border-color:var(--acc);color:var(--acc);}
+.btn-red{background:transparent;color:var(--acc3);border:1px solid rgba(239,68,68,.3);}
+.btn-red:hover{background:rgba(239,68,68,.08);}
+.btn-home{background:rgba(59,130,246,.1);color:var(--acc2);border:1px solid rgba(59,130,246,.25);}
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--brd);background:var(--sur);padding:0 32px;}
+.tab{padding:12px 20px;font-size:13px;font-weight:600;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .18s;user-select:none;}
+.tab:hover{color:var(--txt);}
+.tab.act{color:var(--acc);border-bottom-color:var(--acc);}
+/* CONTENT */
+.pg{padding:24px 32px;max-width:1600px;margin:0 auto;}
+.pnl{display:none;}.pnl.act{display:block;}
+/* KPI CARDS */
+.krow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+@media(max-width:1100px){.krow{grid-template-columns:repeat(3,1fr);}  }
+@media(max-width:700px){.krow{grid-template-columns:1fr 1fr;}}
+.kcard{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.k1::before{background:var(--acc2);}
+.k2::before{background:var(--dim);}
+.k3::before{background:var(--acc);}
+.k4::before{background:var(--acc3);}
+.k5::before{background:var(--acc4);}
+.klbl{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+.kval{font-family:'DM Mono',monospace;font-size:20px;font-weight:600;margin-bottom:4px;}
+.ksub{font-size:10px;color:var(--dim);}
+.c1{color:var(--acc2);}.c2{color:var(--mid);}.c3{color:var(--acc);}.c4{color:var(--acc3);}.c5{color:var(--acc4);}
+/* CHART GRID */
+.cgrid2{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:24px;}
+.cgrid22{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:900px){.cgrid2,.cgrid22{grid-template-columns:1fr;}}
+.ccard{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:18px 20px;}
+.ctitle{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:2px;}
+.csub{font-size:10px;color:var(--dim);margin-bottom:14px;}
+/* TABLE */
+.tbl-wrap{background:var(--sur);border:1px solid var(--brd);border-radius:12px;overflow:hidden;margin-bottom:24px;}
+.tbl-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--brd);flex-wrap:wrap;gap:8px;}
+.tbl-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;}
+.fgrp{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.fsel{background:var(--sur2);border:1px solid var(--brd);color:var(--txt);padding:6px 10px;border-radius:7px;font-size:12px;cursor:pointer;outline:none;}
+.fsel:focus{border-color:var(--acc);}
+.srch{display:flex;align-items:center;gap:5px;background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:5px 9px;}
+.srch input{background:none;border:none;color:var(--txt);font-size:12px;outline:none;width:150px;}
+.srch input::placeholder{color:var(--dim);}
+.tscr{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{padding:9px 14px;text-align:left;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;background:var(--sur2);border-bottom:1px solid var(--brd);font-weight:600;white-space:nowrap;}
+th.r,td.r{text-align:right;}
+tbody tr{border-bottom:1px solid rgba(30,45,69,.6);transition:background .12s;cursor:pointer;}
+tbody tr:hover{background:rgba(16,185,129,.04);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:9px 14px;vertical-align:middle;}
+.mono{font-family:'DM Mono',monospace;font-size:11px;}
+.pgn{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--brd);}
+.pi{font-size:11px;color:var(--dim);}
+.pbtns{display:flex;gap:4px;}
+.pbtn{padding:3px 9px;border-radius:6px;border:1px solid var(--brd);background:none;color:var(--txt);font-size:11px;cursor:pointer;}
+.pbtn.act{background:var(--acc);color:#fff;border-color:var(--acc);}
+/* PBAR */
+.pbar{height:4px;background:var(--brd);border-radius:2px;overflow:hidden;margin-top:3px;}
+.pfill{height:100%;border-radius:2px;}
+/* PM GRID */
+.pmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:24px;}
+.pmcard{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px;transition:border-color .18s;}
+.pmcard:hover{border-color:var(--acc);}
+.pm-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.pm-av{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;flex-shrink:0;}
+.pm-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;}
+.pm-role{font-size:10px;color:var(--dim);}
+.pm-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(30,45,69,.5);}
+.pm-row:last-of-type{border-bottom:none;}
+.pm-l{font-size:11px;color:var(--dim);}
+.pm-v{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;}
+.pm-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px;}
+.pm-tag{font-size:9px;background:var(--sur2);border:1px solid var(--brd);padding:2px 6px;border-radius:10px;color:var(--mid);}
+/* MODAL */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;align-items:center;justify-content:center;padding:16px;}
+.moverlay.open{display:flex;}
+.modal{background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:24px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;position:relative;}
+.modal-lg{max-width:700px;}
+.xbtn{position:absolute;top:14px;right:14px;background:var(--sur2);border:1px solid var(--brd);color:var(--dim);width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.xbtn:hover{color:var(--acc3);}
+.mtitle{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;margin-bottom:3px;}
+.msub{font-size:11px;color:var(--dim);margin-bottom:16px;}
+.flbl{font-size:10px;color:var(--mid);font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.finp{width:100%;background:var(--sur2);border:1px solid var(--brd);color:var(--txt);padding:8px 11px;border-radius:7px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;}
+.finp:focus{border-color:var(--acc);}
+.fg{margin-bottom:12px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.sep{height:1px;background:var(--brd);margin:14px 0;}
+/* HITO ROWS */
+.hito-tbl{width:100%;border-collapse:collapse;margin-bottom:10px;}
+.hito-tbl th{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;padding:4px 6px;text-align:left;font-weight:600;}
+.hito-tbl td{padding:4px 4px;}
+.hito-tbl td input,.hito-tbl td select{background:var(--sur2);border:1px solid var(--brd);color:var(--txt);padding:5px 7px;border-radius:6px;font-size:11px;width:100%;font-family:'DM Sans',sans-serif;outline:none;}
+.hito-tbl td input:focus{border-color:var(--acc);}
+.hito-tbl td input[type=checkbox]{width:auto;accent-color:var(--acc);}
+.hito-tbl tr.hrow{background:var(--sur2);border-radius:7px;margin-bottom:4px;}
+.del-h{background:none;border:none;color:var(--acc3);cursor:pointer;font-size:14px;padding:2px 5px;opacity:.6;}
+.del-h:hover{opacity:1;}
+.add-h{display:flex;align-items:center;gap:6px;padding:6px;border-radius:7px;border:1px dashed var(--brd);background:none;color:var(--dim);font-size:11px;cursor:pointer;width:100%;justify-content:center;transition:all .15s;margin-bottom:12px;}
+.add-h:hover{border-color:var(--acc);color:var(--acc);}
+.pct-tot{font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;background:var(--sur2);margin-bottom:10px;text-align:right;}
+/* BULK */
+.dzone{border:2px dashed var(--brd);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .18s;margin-bottom:12px;}
+.dzone:hover,.dzone.drag{border-color:var(--acc);background:rgba(16,185,129,.04);}
+.tpldl{font-size:11px;color:var(--mid);margin-bottom:12px;padding:9px 12px;background:var(--sur2);border-radius:7px;border:1px solid var(--brd);}
+.tpldl a{color:var(--acc);text-decoration:none;}
+.tpldl a:hover{text-decoration:underline;}
+.bulk-prev{background:var(--sur2);border:1px solid var(--brd);border-radius:7px;padding:10px;font-size:11px;max-height:180px;overflow-y:auto;margin-bottom:10px;}
+.bp-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(30,45,69,.4);}
+.bp-row:last-child{border-bottom:none;}
+/* DETAIL */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.ii{background:var(--sur2);border-radius:7px;padding:9px 12px;}
+.il{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;font-weight:600;}
+.iv{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;}
+.hito-det{padding:7px 10px;background:var(--sur2);border-radius:7px;margin-bottom:5px;display:grid;grid-template-columns:1fr 60px 110px 110px auto 100px;gap:8px;align-items:center;font-size:11px;}
+.hd-hdr{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.badge-c{background:rgba(16,185,129,.15);color:var(--acc);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+.badge-p{background:rgba(245,158,11,.12);color:var(--acc4);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;}
+/* ALERT */
+.alert{padding:9px 12px;border-radius:7px;font-size:11px;margin-bottom:10px;line-height:1.5;}
+.alert-e{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--acc3);}
+.alert-w{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--acc4);}
+.alert-s{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--acc);}
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--sur);border:1px solid var(--brd);color:var(--txt);padding:10px 16px;border-radius:9px;font-size:12px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none;max-width:300px;}
+.toast.show{opacity:1;transform:translateY(0);}
+.ava{width:24px;height:24px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;margin-right:5px;vertical-align:middle;}
+
+/* XM ACCENT OVERRIDE */
+.tab.act{color:#3B82F6;border-bottom-color:#3B82F6;}
+.hbadge{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:#3B82F6;}
+.btn-green{background:#3B82F6;}
+.btn-green:hover{background:#2563EB;}
+.pbtn.act{background:#3B82F6;border-color:#3B82F6;}
+/* PAYMENT PIPS */
+.pip-grid{display:flex;flex-wrap:wrap;gap:2px;margin:8px 0;}
+.pip{width:12px;height:12px;border-radius:2px;}
+.pip-paid{background:#10B981;}.pip-future{background:rgba(59,130,246,.4);}.pip-done{background:var(--brd);}
+.prog-legend{display:flex;gap:12px;font-size:10px;color:var(--dim);margin-bottom:10px;}
+.prog-legend span{display:flex;align-items:center;gap:4px;}
+.prog-legend .dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.pay-row{display:flex;justify-content:space-between;align-items:center;padding:5px 10px;background:var(--sur2);border-radius:6px;margin-bottom:3px;font-size:11px;}
+.pay-row.paid{border-left:2px solid #10B981;}.pay-row.pending{border-left:2px solid var(--brd);}
+.badge-c{background:rgba(16,185,129,.15);color:#10B981;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;}
+.badge-p{background:rgba(245,158,11,.12);color:#F59E0B;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <a class="hdr-logo" href="index.html">
+    <img src="LOGO_SRC" alt="SK">
+    <div><div class="hdr-name">Skysense</div><div class="hdr-sub">P$250M Credit Facility · Control XM</div></div>
+  </a>
+  <div class="hdr-right">
+    <a href="index.html" class="btn btn-home" style="font-size:11px;padding:5px 11px;">← Inicio</a>
+    <div class="hbadge">44 PROYECTOS · MXN</div>
+    <div class="hdate" id="hdate">—</div>
+  </div>
+</div>
+
+<div class="abar">
+  <div style="font-size:12px;color:var(--dim);"><span style="color:#3B82F6;font-weight:600;">Credit Facility P$250M</span> · Proyectos a mensualidades · Base: Mayo 2026</div>
+  <div class="sp"></div>
+  <button class="btn btn-outline" onclick="expXLSX()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+    Exportar Excel
+  </button>
+</div>
+
+<div class="tabs">
+  <div class="tab act" onclick="sw('resumen',0)">📊 Resumen</div>
+  <div class="tab" onclick="sw('proyectos',1)">📋 Proyectos</div>
+  <div class="tab" onclick="sw('flujo',2)">💰 Flujo Mensual</div>
+</div>
+
+<div class="pg">
+
+<!-- RESUMEN -->
+<div class="pnl act" id="pnl-resumen">
+  <div class="krow">
+    <div class="kcard k1"><div class="klbl">Proyectos Activos <span style="font-size:16px">📁</span></div><div class="kval" style="color:#3B82F6">44</div><div class="ksub">P$250M Credit Facility</div></div>
+    <div class="kcard k2"><div class="klbl">Portafolio Total <span style="font-size:16px">💲</span></div><div class="kval c2" id="k-tot">—</div><div class="ksub">Suma de contratos</div></div>
+    <div class="kcard k3"><div class="klbl">Total Cobrado <span style="font-size:16px">✅</span></div><div class="kval c3" id="k-cob">—</div><div class="ksub" id="k-cob-sub">—</div></div>
+    <div class="kcard k4"><div class="klbl">Por Cobrar (Saldo) <span style="font-size:16px">⏳</span></div><div class="kval c4" id="k-pen">—</div><div class="ksub" id="k-pen-sub">—</div></div>
+    <div class="kcard k5"><div class="klbl">Mensualidades Cumplidas <span style="font-size:16px">📅</span></div><div class="kval c5" id="k-meses">—</div><div class="ksub" id="k-meses-sub">—</div></div>
+  </div>
+  <div class="cgrid2">
+    <div class="ccard"><div class="ctitle">Cobrado vs Por Cobrar por Proyecto</div><div class="csub">Ordenado por monto total · Top 15</div><canvas id="ch-pm-bar" height="260"></canvas></div>
+    <div class="ccard"><div class="ctitle">Distribución por Plazo</div><div class="csub">Agrupación por número de mensualidades</div><canvas id="ch-plazo" height="260"></canvas></div>
+  </div>
+  <!-- Resumen table -->
+  <div class="tbl-wrap">
+    <div class="tbl-head"><div class="tbl-title">Resumen por Plazo de Contrato</div></div>
+    <div class="tscr">
+      <table>
+        <thead><tr><th>Plazo</th><th class="r">Proyectos</th><th class="r">Portafolio Total</th><th class="r">Total Cobrado</th><th class="r">Por Cobrar</th><th class="r">% Cobrado</th><th class="r">Mensualidad Promedio</th></tr></thead>
+        <tbody id="plazo-sum-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PROYECTOS -->
+<div class="pnl" id="pnl-proyectos">
+  <div class="tbl-wrap">
+    <div class="tbl-head">
+      <div class="tbl-title">Proyectos XM <span style="color:var(--dim);font-size:11px;font-weight:400;margin-left:6px" id="plbl"></span></div>
+      <div class="fgrp">
+        <select class="fsel" id="f-plazo" onchange="filterT()">
+          <option value="">Todos los plazos</option>
+          <option value="36">36 meses</option><option value="48">48 meses</option>
+          <option value="60">60 meses</option><option value="66">66 meses</option><option value="72">72 meses</option>
+        </select>
+        <select class="fsel" id="f-status" onchange="filterT()">
+          <option value="">Todos</option>
+          <option value="mayor50">+50% cobrado</option>
+          <option value="menor50">-50% cobrado</option>
+        </select>
+        <div class="srch"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="f-srch" placeholder="Buscar proyecto..." oninput="filterT()"></div>
+      </div>
+    </div>
+    <div class="tscr">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Proyecto</th><th class="r">Plazo</th>
+          <th class="r">Monto Total</th><th class="r">Mensualidad</th>
+          <th class="r">Cobrado</th><th class="r">Por Cobrar</th>
+          <th class="r">Meses Cobrados</th><th class="r">Meses Restantes</th>
+          <th>Avance</th><th>Detalle</th>
+        </tr></thead>
+        <tbody id="tbdy"></tbody>
+      </table>
+    </div>
+    <div class="pgn"><div class="pi" id="pginfo"></div><div class="pbtns" id="pgbtns"></div></div>
+  </div>
+</div>
+
+<!-- FLUJO MENSUAL -->
+<div class="pnl" id="pnl-flujo">
+  <div class="cgrid22">
+    <div class="ccard"><div class="ctitle">Flujo Mensual de Mensualidades</div><div class="csub">Cobros programados · Próximos 24 meses</div><canvas id="ch-flujo" height="220"></canvas></div>
+    <div class="ccard"><div class="ctitle">Acumulado vs Portafolio Total</div><div class="csub">Cobrado acumulado proyectado</div><canvas id="ch-ac" height="220"></canvas></div>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-head">
+      <div class="tbl-title">Proyección Mensual por Proyecto</div>
+      <div class="fgrp">
+        <select class="fsel" id="f-rng" onchange="renderFlujo()">
+          <option value="12">12 meses</option><option value="24" selected>24 meses</option><option value="36">36 meses</option>
+        </select>
+      </div>
+    </div>
+    <div class="tscr"><table><thead id="flujo-th"></thead><tbody id="flujo-tb"></tbody></table></div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL DETALLE (Read-only) -->
+<div class="moverlay" id="m-detail">
+  <div class="modal modal-lg">
+    <button class="xbtn" onclick="closeM('m-detail')">✕</button>
+    <div class="mtitle" id="d-nombre">—</div>
+    <div class="msub" id="d-sub">—</div>
+    <div class="ig" id="d-kpis"></div>
+    <div class="sep"></div>
+    <div style="font-size:10px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">PROGRESO DE MENSUALIDADES</div>
+    <div class="pip-grid" id="d-pips"></div>
+    <div class="prog-legend">
+      <span><div class="dot" style="background:#10B981"></div> Cobrada (est.)</span>
+      <span><div class="dot" style="background:rgba(59,130,246,.4)"></div> Programada (futuro)</span>
+      <span><div class="dot" style="background:var(--brd)"></div> Completada</span>
+    </div>
+    <div class="sep"></div>
+    <div style="font-size:10px;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">CALENDARIO DE PAGOS (desde Mayo 2026)</div>
+    <div id="d-timeline" style="max-height:260px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var RAW = [{"id": 1, "nombre": "Alysa", "meses": 60, "monto_total": 10352172.6, "pagado": 3968332.83, "por_pagar": 6383839.77, "monthly_amount": 172536.21, "meses_futuros": 37, "meses_cobrados": 23, "payments": [172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 172536.21, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 2, "nombre": "Mexcoat", "meses": 36, "monto_total": 10167673.66, "pagado": 6496013.72, "por_pagar": 3671659.93, "monthly_amount": 282435.38, "meses_futuros": 13, "meses_cobrados": 23, "payments": [282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 282435.38, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 3, "nombre": "Foster Wheeler", "meses": 36, "monto_total": 5563928.48, "pagado": 2781964.24, "por_pagar": 2781964.24, "monthly_amount": 154553.57, "meses_futuros": 18, "meses_cobrados": 18, "payments": [154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 154553.57, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 4, "nombre": "DM Fase 1", "meses": 36, "monto_total": 7687968.83, "pagado": 5552421.93, "por_pagar": 2135546.9, "monthly_amount": 213554.69, "meses_futuros": 10, "meses_cobrados": 26, "payments": [213554.69, 213554.69, 213554.69, 213554.69, 213554.69, 213554.69, 213554.69, 213554.69, 213554.69, 213554.69, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 5, "nombre": "DM Fase 2", "meses": 36, "monto_total": 5515781.4, "pagado": 2757890.7, "por_pagar": 2757890.7, "monthly_amount": 153216.15, "meses_futuros": 18, "meses_cobrados": 18, "payments": [153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 153216.15, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 6, "nombre": "Bodesa", "meses": 36, "monto_total": 3154593.72, "pagado": 2103062.48, "por_pagar": 1051531.24, "monthly_amount": 87627.6, "meses_futuros": 12, "meses_cobrados": 24, "payments": [87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 87627.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 7, "nombre": "Credicer", "meses": 36, "monto_total": 1220102.69, "pagado": 813401.79, "por_pagar": 406700.9, "monthly_amount": 33891.74, "meses_futuros": 12, "meses_cobrados": 24, "payments": [33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 33891.74, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 8, "nombre": "IPASA 1", "meses": 36, "monto_total": 14626656.0, "pagado": 10969992.0, "por_pagar": 3656664.0, "monthly_amount": 406296.0, "meses_futuros": 9, "meses_cobrados": 27, "payments": [406296.0, 406296.0, 406296.0, 406296.0, 406296.0, 406296.0, 406296.0, 406296.0, 406296.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 9, "nombre": "IPASA 2", "meses": 66, "monto_total": 6748784.48, "pagado": 1636068.97, "por_pagar": 5112715.52, "monthly_amount": 102254.31, "meses_futuros": 50, "meses_cobrados": 16, "payments": [102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 102254.31, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 10, "nombre": "Nuvoil Chico", "meses": 48, "monto_total": 1662924.0, "pagado": 1274061.91, "por_pagar": 388862.09, "monthly_amount": 34644.25, "meses_futuros": 12, "meses_cobrados": 36, "payments": [34644.25, 34724.41, 34067.11, 33730.45, 33105.22, 32736.49, 32239.52, 31662.38, 31245.56, 30700.48, 30251.59, 29754.62, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 11, "nombre": "Nuvoil Grande", "meses": 48, "monto_total": 5248192.97, "pagado": 437349.41, "por_pagar": 4810843.55, "monthly_amount": 109337.35, "meses_futuros": 44, "meses_cobrados": 4, "payments": [109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 109337.35, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 12, "nombre": "Plaza U", "meses": 48, "monto_total": 1615504.14, "pagado": 572157.72, "por_pagar": 1043346.42, "monthly_amount": 33656.34, "meses_futuros": 31, "meses_cobrados": 17, "payments": [33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 33656.34, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 13, "nombre": "Bidasoa Fotovoltaico", "meses": 36, "monto_total": 19957970.58, "pagado": 339874.96, "por_pagar": 19618095.61, "monthly_amount": 554388.07, "meses_futuros": 39, "meses_cobrados": 0, "payments": [554388.07, 551662.83, 548937.6, 546212.38, 543487.16, 540761.94, 538036.72, 535311.49, 532586.27, 529861.05, 527135.83, 524410.6, 521685.38, 518960.16, 516234.94, 513509.72, 510784.49, 508059.27, 502608.83, 499883.6, 497158.38, 491707.94, 488982.72, 486257.49, 483532.28, 480807.05, 478081.83, 475356.6, 472631.38, 469906.16, 469906.16, 469906.16, 469906.16, 469906.16, 469906.16, 469906.16, 469906.16, 469906.16, 469906.16, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 14, "nombre": "UNIDOC", "meses": 48, "monto_total": 9534976.0, "pagado": 0, "por_pagar": 11124138.67, "monthly_amount": 198645.33, "meses_futuros": 56, "meses_cobrados": 0, "payments": [198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 198645.33, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 15, "nombre": "Tejidos y Text", "meses": 36, "monto_total": 8834559.12, "pagado": 490808.84, "por_pagar": 8343750.28, "monthly_amount": 245404.42, "meses_futuros": 34, "meses_cobrados": 2, "payments": [245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 245404.42, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 16, "nombre": "Clarimex", "meses": 48, "monto_total": 5285456.69, "pagado": 0, "por_pagar": 5836025.09, "monthly_amount": 110113.68, "meses_futuros": 53, "meses_cobrados": 0, "payments": [110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 110113.68, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 17, "nombre": "Bidasoa BESS", "meses": 72, "monto_total": 17640000.0, "pagado": 0, "por_pagar": 21317704.0, "monthly_amount": 245000.0, "meses_futuros": 69, "meses_cobrados": 3, "payments": [245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 245000.0, 4657704.0, 0.0]}, {"id": 18, "nombre": "Bidasoa Xalapa", "meses": 36, "monto_total": 15176340.0, "pagado": 421565.0, "por_pagar": 14754775.0, "monthly_amount": 421565.0, "meses_futuros": 35, "meses_cobrados": 1, "payments": [421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 421565.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 19, "nombre": "Bidasoa Multi Sitios", "meses": 36, "monto_total": 19386842.75, "pagado": 1615570.23, "por_pagar": 17771272.52, "monthly_amount": 538523.41, "meses_futuros": 33, "meses_cobrados": 3, "payments": [538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 538523.41, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 20, "nombre": "Clarimex 2", "meses": 72, "monto_total": 15506813.79, "pagado": 646117.24, "por_pagar": 14860696.55, "monthly_amount": 215372.41, "meses_futuros": 69, "meses_cobrados": 3, "payments": [215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 215372.41, 0.0]}, {"id": 21, "nombre": "Fisfiber 12", "meses": 36, "monto_total": 3814308.0, "pagado": 211906.0, "por_pagar": 3602402.0, "monthly_amount": 105953.0, "meses_futuros": 34, "meses_cobrados": 2, "payments": [105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 105953.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 22, "nombre": "Fisfiber 18", "meses": 36, "monto_total": 9683245.86, "pagado": 537958.1, "por_pagar": 9145287.76, "monthly_amount": 268979.05, "meses_futuros": 34, "meses_cobrados": 2, "payments": [268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 268979.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 23, "nombre": "FMAguascalientes", "meses": 72, "monto_total": 3250423.84, "pagado": 0, "por_pagar": 9145287.76, "monthly_amount": 45144.78, "meses_futuros": 69, "meses_cobrados": 3, "payments": [45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 45144.78, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 24, "nombre": "FMCoacalco", "meses": 72, "monto_total": 2851848.86, "pagado": 0, "por_pagar": 3114989.52, "monthly_amount": 39609.01, "meses_futuros": 69, "meses_cobrados": 3, "payments": [39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 39609.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 25, "nombre": "FMCoapa", "meses": 72, "monto_total": 5539854.04, "pagado": 2806832.21, "por_pagar": 2733021.83, "monthly_amount": 76942.42, "meses_futuros": 70, "meses_cobrados": 2, "payments": [76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 76942.42, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 26, "nombre": "FMCoyoacan", "meses": 72, "monto_total": 1969264.63, "pagado": 164105.39, "por_pagar": 1805159.24, "monthly_amount": 27350.9, "meses_futuros": 66, "meses_cobrados": 6, "payments": [27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 27350.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 27, "nombre": "FMDel Valle", "meses": 72, "monto_total": 1406617.95, "pagado": 97681.8, "por_pagar": 1308936.15, "monthly_amount": 19536.36, "meses_futuros": 67, "meses_cobrados": 5, "payments": [19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 19536.36, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 28, "nombre": "FMInterlomas (angelopolis)", "meses": 72, "monto_total": 3119359.25, "pagado": 43324.43, "por_pagar": 3076034.81, "monthly_amount": 43324.43, "meses_futuros": 71, "meses_cobrados": 1, "payments": [43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 43324.43, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 29, "nombre": "FMMerida Campestre", "meses": 72, "monto_total": 3165631.0, "pagado": 219835.49, "por_pagar": 2945795.51, "monthly_amount": 43967.1, "meses_futuros": 67, "meses_cobrados": 5, "payments": [43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 43967.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 30, "nombre": "FMMerida Centro", "meses": 72, "monto_total": 3493213.14, "pagado": 242584.25, "por_pagar": 3250628.9, "monthly_amount": 48516.85, "meses_futuros": 67, "meses_cobrados": 5, "payments": [48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 48516.85, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 31, "nombre": "FMMetepec", "meses": 72, "monto_total": 2389700.13, "pagado": 99570.84, "por_pagar": 2290129.29, "monthly_amount": 33190.28, "meses_futuros": 69, "meses_cobrados": 3, "payments": [33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 33190.28, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 32, "nombre": "FMMonterrey Centro", "meses": 72, "monto_total": 6591295.67, "pagado": 457728.87, "por_pagar": 6133566.8, "monthly_amount": 91545.77, "meses_futuros": 67, "meses_cobrados": 5, "payments": [91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 91545.77, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 33, "nombre": "FMGarza Sada", "meses": 72, "monto_total": 3170712.36, "pagado": 352301.37, "por_pagar": 2818410.98, "monthly_amount": 44037.67, "meses_futuros": 64, "meses_cobrados": 8, "payments": [44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 44037.67, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 34, "nombre": "FMSan Jeronimo", "meses": 72, "monto_total": 7532505.1, "pagado": 523090.63, "por_pagar": 7009414.47, "monthly_amount": 104618.13, "meses_futuros": 67, "meses_cobrados": 5, "payments": [104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 104618.13, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 35, "nombre": "FMPalomar", "meses": 72, "monto_total": 6026163.44, "pagado": 669573.72, "por_pagar": 5356589.72, "monthly_amount": 83696.71, "meses_futuros": 64, "meses_cobrados": 8, "payments": [83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 83696.71, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 36, "nombre": "FMPatria", "meses": 72, "monto_total": 6027189.9, "pagado": 167421.94, "por_pagar": 5859767.96, "monthly_amount": 83710.97, "meses_futuros": 70, "meses_cobrados": 2, "payments": [83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 83710.97, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 37, "nombre": "FMPedregal", "meses": 72, "monto_total": 2780138.59, "pagado": 115839.11, "por_pagar": 2664299.48, "monthly_amount": 38613.04, "meses_futuros": 69, "meses_cobrados": 3, "payments": [38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 38613.04, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 38, "nombre": "FMPuebla", "meses": 72, "monto_total": 1874236.41, "pagado": 78093.18, "por_pagar": 1796143.22, "monthly_amount": 26031.06, "meses_futuros": 69, "meses_cobrados": 3, "payments": [26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 26031.06, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 39, "nombre": "FMQueretaro", "meses": 72, "monto_total": 2840582.02, "pagado": 197262.64, "por_pagar": 2643319.38, "monthly_amount": 39452.53, "meses_futuros": 67, "meses_cobrados": 5, "payments": [39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 39452.53, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 40, "nombre": "FMSatelite", "meses": 72, "monto_total": 1310883.15, "pagado": 54620.13, "por_pagar": 1256263.02, "monthly_amount": 18206.71, "meses_futuros": 69, "meses_cobrados": 3, "payments": [18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 18206.71, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 41, "nombre": "FMTlalne", "meses": 72, "monto_total": 4339977.32, "pagado": 301387.31, "por_pagar": 4038590.01, "monthly_amount": 60277.46, "meses_futuros": 67, "meses_cobrados": 5, "payments": [60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 60277.46, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 42, "nombre": "FMTorre\u00f3n", "meses": 72, "monto_total": 1981527.87, "pagado": 82563.66, "por_pagar": 1898964.21, "monthly_amount": 27521.22, "meses_futuros": 69, "meses_cobrados": 3, "payments": [27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 27521.22, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 43, "nombre": "FMUruguay", "meses": 72, "monto_total": 1438103.32, "pagado": 59920.97, "por_pagar": 1378182.35, "monthly_amount": 19973.66, "meses_futuros": 69, "meses_cobrados": 3, "payments": [19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 19973.66, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}, {"id": 44, "nombre": "FMVeracruz", "meses": 72, "monto_total": 3135045.97, "pagado": 217711.53, "por_pagar": 2917334.45, "monthly_amount": 43542.31, "meses_futuros": 67, "meses_cobrados": 5, "payments": [43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 43542.31, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}];
+var START_YEAR=2026,START_MONTH=5;
+var MOS=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+var _charts={};
+
+function fmt(v){var a=Math.abs(v||0);var s=(v||0)<0?'-':'';if(a>=1e9)return s+'$'+(a/1e9).toFixed(2)+'B';if(a>=1e6)return s+'$'+(a/1e6).toFixed(2)+'M';if(a>=1e3)return s+'$'+(a/1e3).toFixed(1)+'K';return s+'$'+a.toFixed(0);}
+function fmtF(v){var s=(v||0)<0?'-':'';return s+'$'+Math.abs(v||0).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function mk(off){var m=(START_MONTH-1+off)%12+1;var y=START_YEAR+Math.floor((START_MONTH-1+off)/12);return y+'-'+(m<10?'0':'')+m;}
+function mlbl(k){var p=k.split('-');return MOS[parseInt(p[1])]+' '+p[0].slice(2);}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3000);}
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.addEventListener('click',function(e){if(e.target.classList.contains('moverlay'))e.target.classList.remove('open');});
+
+window.addEventListener('load',function(){
+  document.getElementById('hdate').textContent=new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+  fillKPIs();renderCharts();renderPlazoTable();filterT();renderFlujo();
+});
+
+function fillKPIs(){
+  var tot=RAW.reduce(function(s,p){return s+p.monto_total;},0);
+  var cob=RAW.reduce(function(s,p){return s+p.pagado;},0);
+  var pen=RAW.reduce(function(s,p){return s+p.por_pagar;},0);
+  var mc=RAW.reduce(function(s,p){return s+p.meses_cobrados;},0);
+  var mf=RAW.reduce(function(s,p){return s+p.meses_futuros;},0);
+  document.getElementById('k-tot').textContent=fmt(tot);
+  document.getElementById('k-cob').textContent=fmt(cob);
+  document.getElementById('k-cob-sub').textContent=(cob/tot*100).toFixed(1)+'% del portafolio';
+  document.getElementById('k-pen').textContent=fmt(pen);
+  document.getElementById('k-pen-sub').textContent=(pen/tot*100).toFixed(1)+'% pendiente';
+  document.getElementById('k-meses').textContent=mc+' / '+(mc+mf);
+  document.getElementById('k-meses-sub').textContent=mf+' mensualidades por cobrar';
+}
+
+function renderPlazoTable(){
+  var pm={};
+  RAW.forEach(function(p){var k=p.meses+' meses';if(!pm[k])pm[k]={n:0,tot:0,cob:0,pen:0,ma:0};pm[k].n++;pm[k].tot+=p.monto_total;pm[k].cob+=p.pagado;pm[k].pen+=p.por_pagar;pm[k].ma+=p.monthly_amount;});
+  var tb=document.getElementById('plazo-sum-tbody');tb.innerHTML='';
+  Object.keys(pm).sort(function(a,b){return parseInt(a)-parseInt(b);}).forEach(function(k){
+    var d=pm[k];var pct=d.tot>0?(d.cob/d.tot*100):0;
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+k+'</strong></td><td class="r mono">'+d.n+'</td><td class="r mono">'+fmtF(d.tot)+'</td><td class="r mono" style="color:#10B981">'+fmtF(d.cob)+'</td><td class="r mono" style="color:#EF4444">'+fmtF(d.pen)+'</td><td class="r mono" style="color:#3B82F6">'+pct.toFixed(1)+'%</td><td class="r mono" style="color:var(--mid)">'+fmtF(d.ma/d.n)+'/mes</td>';
+    tb.appendChild(tr);
+  });
+}
+
+function dc(id){if(_charts[id]){_charts[id].destroy();delete _charts[id];}}
+
+function renderCharts(){
+  var t15=RAW.slice().sort(function(a,b){return b.monto_total-a.monto_total;}).slice(0,15);
+  dc('pm-bar');
+  _charts['pm-bar']=new Chart(document.getElementById('ch-pm-bar'),{type:'bar',data:{labels:t15.map(function(p){return p.nombre;}),datasets:[{label:'Cobrado',data:t15.map(function(p){return p.pagado;}),backgroundColor:'#10B981',borderRadius:2},{label:'Por Cobrar',data:t15.map(function(p){return p.por_pagar;}),backgroundColor:'#F59E0B',borderRadius:2}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{labels:{color:'#94A3B8',font:{size:11}},position:'bottom'},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+fmtF(c.raw);}}}},scales:{x:{stacked:false,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748B',font:{size:9},callback:function(v){return fmt(v);}}},y:{grid:{display:false},ticks:{color:'#94A3B8',font:{size:10}}}}}});
+
+  var plazos={};RAW.forEach(function(p){plazos[p.meses]=(plazos[p.meses]||0)+1;});
+  var pk=Object.keys(plazos).sort(function(a,b){return a-b;});
+  var pcols=['#F59E0B','#10B981','#3B82F6','#8B5CF6','#EF4444'];
+  dc('plazo');
+  _charts['plazo']=new Chart(document.getElementById('ch-plazo'),{type:'doughnut',data:{labels:pk.map(function(k){return k+' meses'}),datasets:[{data:pk.map(function(k){return plazos[k];}),backgroundColor:pcols,borderColor:'#111827',borderWidth:2}]},options:{responsive:true,plugins:{legend:{labels:{color:'#94A3B8',font:{size:11}},position:'bottom'},tooltip:{callbacks:{label:function(c){return c.label+': '+c.raw+' proyectos';}}}},cutout:'55%'}});
+
+  // Flujo bar & acum
+  var mm={};for(var i=0;i<36;i++){mm[mk(i)]=0;}
+  RAW.forEach(function(p){p.payments.forEach(function(a,i){var k=mk(i);if(k in mm&&a>0)mm[k]+=a;});});
+  var fkeys=Object.keys(mm).sort();
+  dc('flujo');
+  _charts['flujo']=new Chart(document.getElementById('ch-flujo'),{type:'bar',data:{labels:fkeys.map(mlbl),datasets:[{label:'Mensualidades',data:fkeys.map(function(k){return mm[k];}),backgroundColor:'rgba(59,130,246,.65)',borderColor:'#3B82F6',borderWidth:1,borderRadius:2}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return fmtF(c.raw);}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748B',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748B',font:{size:9},callback:function(v){return fmt(v);}}}}}});
+
+  var tot=RAW.reduce(function(s,p){return s+p.monto_total;},0);
+  var cobBase=RAW.reduce(function(s,p){return s+p.pagado;},0);
+  var running=cobBase;var acData=fkeys.map(function(k){running+=mm[k];return Math.min(running,tot);});
+  dc('ac');
+  _charts['ac']=new Chart(document.getElementById('ch-ac'),{type:'line',data:{labels:fkeys.map(mlbl),datasets:[{label:'Acumulado',data:acData,borderColor:'#10B981',backgroundColor:'rgba(16,185,129,.1)',fill:true,tension:.3,pointRadius:2},{label:'Total Portafolio',data:fkeys.map(function(){return tot;}),borderColor:'#64748B',borderDash:[4,4],borderWidth:1,pointRadius:0}]},options:{responsive:true,plugins:{legend:{labels:{color:'#94A3B8',font:{size:11}},position:'bottom'},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+fmtF(c.raw);}}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748B',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748B',font:{size:9},callback:function(v){return fmt(v);}}}}}});
+}
+
+var curP=1,PS=20,filt=[];
+function filterT(){curP=1;
+  var srch=(document.getElementById('f-srch').value||'').toLowerCase();
+  var plazo=document.getElementById('f-plazo').value;
+  var status=document.getElementById('f-status').value;
+  filt=RAW.filter(function(p){
+    var pct=p.monto_total>0?(p.pagado/p.monto_total*100):0;
+    return (!srch||p.nombre.toLowerCase().includes(srch))&&(!plazo||p.meses==plazo)&&(!status||(status==='mayor50'?pct>=50:pct<50));
+  });renderT();
+}
+function renderT(){
+  var tot=filt.length,st=(curP-1)*PS,items=filt.slice(st,st+PS);
+  document.getElementById('plbl').textContent=tot+' proyecto'+(tot!=1?'s':'');
+  document.getElementById('pginfo').textContent=tot>0?'Mostrando '+(st+1)+'–'+Math.min(st+PS,tot)+' de '+tot:'Sin resultados';
+  var tb=document.getElementById('tbdy');tb.innerHTML='';
+  items.forEach(function(p){
+    var pct=p.monto_total>0?Math.min(p.pagado/p.monto_total*100,100):0;
+    var clr=pct>=75?'#10B981':pct>=50?'#F59E0B':'#3B82F6';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td class="mono" style="color:var(--dim)">'+p.id+'</td>'+
+      '<td><strong style="font-size:12px">'+p.nombre+'</strong></td>'+
+      '<td class="mono r"><span style="background:var(--sur2);padding:2px 7px;border-radius:10px;border:1px solid var(--brd);font-size:10px;">'+p.meses+'m</span></td>'+
+      '<td class="mono r">'+fmtF(p.monto_total)+'</td>'+
+      '<td class="mono r" style="color:var(--mid)">'+fmtF(p.monthly_amount)+'/mes</td>'+
+      '<td class="mono r" style="color:#10B981">'+fmtF(p.pagado)+'</td>'+
+      '<td class="mono r" style="color:#EF4444">'+fmtF(p.por_pagar)+'</td>'+
+      '<td class="mono r" style="color:#10B981">'+p.meses_cobrados+'</td>'+
+      '<td class="mono r" style="color:#EF4444">'+p.meses_futuros+'</td>'+
+      '<td style="min-width:90px"><div style="font-size:9px;color:'+clr+';margin-bottom:2px">'+pct.toFixed(1)+'%</div><div class="pbar"><div class="pfill" style="width:'+pct+'%;background:'+clr+'"></div></div></td>'+
+      '<td><button class="btn btn-outline" style="padding:3px 8px;font-size:10px" onclick="openDetail('+p.id+')">Ver</button></td>';
+    tb.appendChild(tr);
+  });
+  var tp=Math.ceil(tot/PS),bc=document.getElementById('pgbtns');bc.innerHTML='';
+  for(var i=1;i<=Math.min(tp,10);i++){(function(i){var b=document.createElement('button');b.className='pbtn'+(i===curP?' act':'');b.textContent=i;b.onclick=function(e){e.stopPropagation();curP=i;renderT();};bc.appendChild(b);})(i);}
+}
+
+function renderFlujo(){
+  var rng=parseInt(document.getElementById('f-rng').value)||24;
+  var mm={};for(var i=0;i<rng;i++){mm[mk(i)]=0;}
+  RAW.forEach(function(p){p.payments.forEach(function(a,i){var k=mk(i);if(k in mm&&a>0)mm[k]+=a;});});
+  var mkeys=Object.keys(mm).sort();
+  var th='<tr><th style="position:sticky;left:0;background:var(--sur2);min-width:160px">Proyecto</th><th class="r" style="min-width:60px">Plazo</th>'+mkeys.map(function(k){return '<th class="r" style="min-width:90px">'+mlbl(k)+'</th>';}).join('')+'<th class="r" style="min-width:100px">TOTAL</th></tr>';
+  document.getElementById('flujo-th').innerHTML=th;
+  var totals=new Array(mkeys.length).fill(0);var rows='';
+  RAW.forEach(function(p){
+    var amts=mkeys.map(function(k,i){return p.payments[i]||0;});
+    var rt=amts.reduce(function(s,a){return s+a;},0);
+    if(rt===0)return;
+    amts.forEach(function(a,i){totals[i]+=a;});
+    rows+='<tr><td style="position:sticky;left:0;background:var(--sur);font-size:11px;font-weight:600">'+p.nombre+'</td><td class="mono r" style="font-size:10px;color:var(--dim)">'+p.meses+'m</td>'+amts.map(function(a){return '<td class="mono r" style="font-size:10px;color:'+(a>0?'var(--mid)':'var(--brd)')+';">'+(a>0?fmtF(a):'-')+'</td>';}).join('')+'<td class="mono r" style="font-size:11px;color:#3B82F6;font-weight:600">'+fmtF(rt)+'</td></tr>';
+  });
+  var gt=totals.reduce(function(s,a){return s+a;},0);
+  rows+='<tr style="background:rgba(59,130,246,.06);font-weight:700"><td style="position:sticky;left:0;background:rgba(59,130,246,.06);color:#3B82F6;font-size:11px">TOTAL</td><td></td>'+totals.map(function(t){return '<td class="mono r" style="font-size:10px;color:#3B82F6">'+fmtF(t)+'</td>';}).join('')+'<td class="mono r" style="color:#3B82F6">'+fmtF(gt)+'</td></tr>';
+  document.getElementById('flujo-tb').innerHTML=rows;
+}
+
+function openDetail(id){
+  var p=RAW.find(function(x){return x.id===id;});if(!p)return;
+  var pct=p.monto_total>0?Math.min(p.pagado/p.monto_total*100,100):0;
+  document.getElementById('d-nombre').textContent=p.nombre;
+  document.getElementById('d-sub').textContent='Mensualidades · '+p.meses+' meses · '+fmtF(p.monthly_amount)+'/mes';
+  document.getElementById('d-kpis').innerHTML=
+    '<div class="ii"><div class="il">Monto Total Contrato</div><div class="iv" style="color:#3B82F6">'+fmtF(p.monto_total)+'</div></div>'+
+    '<div class="ii"><div class="il">Mensualidad</div><div class="iv" style="color:var(--mid)">'+fmtF(p.monthly_amount)+' / mes</div></div>'+
+    '<div class="ii"><div class="il">Total Cobrado</div><div class="iv" style="color:#10B981">'+fmtF(p.pagado)+'</div></div>'+
+    '<div class="ii"><div class="il">Por Cobrar (Saldo)</div><div class="iv" style="color:#EF4444">'+fmtF(p.por_pagar)+'</div></div>'+
+    '<div class="ii"><div class="il">Meses Cobrados (est.)</div><div class="iv" style="color:#10B981">'+p.meses_cobrados+' de '+p.meses+'</div></div>'+
+    '<div class="ii"><div class="il">% Avance</div><div class="iv" style="color:'+(pct>=75?'#10B981':pct>=50?'#F59E0B':'#3B82F6')+'">'+pct.toFixed(1)+'%</div></div>';
+  var pips='';
+  for(var i=0;i<p.meses;i++){var cls=i<p.meses_cobrados?'pip-paid':(p.payments[i-p.meses_cobrados]>0?'pip-future':'pip-done');pips+='<div class="pip '+cls+'" title="Mes '+(i+1)+'"></div>';}
+  document.getElementById('d-pips').innerHTML=pips;
+  var tl='';var future=p.payments.filter(function(x){return x>0;});
+  for(var i=0;i<p.meses;i++){
+    var k=mk(i);var isPaid=i<p.meses_cobrados;var amt=isPaid?p.monthly_amount:(future[i-p.meses_cobrados]||0);
+    if(amt===0&&!isPaid)continue;
+    tl+='<div class="pay-row '+(isPaid?'paid':'pending')+'"><span class="mono" style="color:var(--dim);font-size:10px">'+mlbl(k)+'</span><span style="font-weight:600;font-family:'DM Mono',monospace;font-size:11px">'+fmtF(amt)+'</span><span>'+(isPaid?'<span class="badge-c">✓ Cobrado</span>':'<span class="badge-p">⏳ Pendiente</span>')+'</span></div>';
+  }
+  document.getElementById('d-timeline').innerHTML=tl||'<div style="color:var(--dim);padding:20px;text-align:center">Sin pagos registrados</div>';
+  openM('m-detail');
+}
+
+function expXLSX(){
+  if(typeof XLSX==='undefined'){toast('⚠️ Librería no disponible');return;}
+  var date=new Date().toISOString().slice(0,10);
+  var ws=[['SKYSENSE · XM CREDIT FACILITY P$250M'],['Generado: '+new Date().toLocaleDateString('es-MX')],[],
+    ['#','Proyecto','Mensualidades','Monto Total','Mensualidad/Mes','Total Cobrado','Por Cobrar','Meses Cobrados','Meses Restantes','% Cobrado']];
+  RAW.forEach(function(p){var pct=p.monto_total>0?(p.pagado/p.monto_total*100).toFixed(2)+'%':'0%';ws.push([p.id,p.nombre,p.meses,p.monto_total,p.monthly_amount,p.pagado,p.por_pagar,p.meses_cobrados,p.meses_futuros,pct]);});
+  var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(ws),'XM');
+  XLSX.writeFile(wb,'Skysense_XM_'+date+'.xlsx');toast('✅ Excel exportado');
+}
+
+function sw(name,idx){
+  document.querySelectorAll('.tab').forEach(function(t,i){t.classList.toggle('act',i===idx);});
+  document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('act');});
+  document.getElementById('pnl-'+name).classList.add('act');
+  if(name==='flujo')renderFlujo();
+}
+</script>
+</body>
+</html>
