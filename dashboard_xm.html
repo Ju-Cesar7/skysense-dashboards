@@ -865,10 +865,26 @@ function editProyecto(i){
   document.getElementById('ep-fecha-mensualidad').value=p.fechaMensualidad||'';
   openModal('m-edit');
 
-if(!proyectos[i].hitos){
-  proyectos[i].hitos = crearHitos(proyectos[i]);
+function crearHitos(p){
+  let arr = [];
+
+  if(!p.meses || !p.inicio){
+    console.log("ERROR: faltan datos para generar hitos", p);
+    return arr;
+  }
+
+  for(let i=0;i<p.meses;i++){
+    let fecha = addMonths(p.inicio,i).slice(0,7);
+
+    arr.push({
+      mes: fecha,
+      pagado: false,
+      monto: p.cuota || 0
+    });
+  }
+
+  return arr;
 }
-pintarHitos(proyectos[i]);
   
 }
 function guardarEdicion(){
