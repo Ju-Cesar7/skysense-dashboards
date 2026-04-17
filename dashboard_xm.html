@@ -608,10 +608,6 @@ tbody tr:hover .edit-icon{opacity:1;}
       </div>
     </div>
   </div>
-  <div id="hitosBox" style="margin-top:10px;border:1px solid #ccc;padding:10px;border-radius:6px;max-height:250px;overflow:auto">
-  <b>Hitos de cobranza</b>
-  <div id="hitosList"></div>
-</div>
   <input type="hidden" id="ep-idx">
   <div style="display:flex;gap:8px;justify-content:flex-end">
     <button class="btn btn-red" onclick="eliminarProyecto()">Eliminar</button>
@@ -864,45 +860,6 @@ function editProyecto(i){
   document.getElementById('ep-fecha-anticipo').value=p.fechaAnticipo||'';
   document.getElementById('ep-fecha-mensualidad').value=p.fechaMensualidad||'';
   openModal('m-edit');
-
-if(!proyectos[i].hitos){
-  proyectos[i].hitos = crearHitos(proyectos[i]);
-}
-
-pintarHitos(proyectos[i]);
-  
-function crearHitos(p){
-  let arr = [];
-
-  if(!p.meses || !p.inicio) return arr;
-
-  // 🔥 convertir fecha a formato correcto
-  let inicio = convertirFecha(p.inicio);
-
-  for(let i=0;i<p.meses;i++){
-    let fecha = addMonths(inicio, i).slice(0,7);
-
-    arr.push({
-      mes: fecha,
-      pagado: false,
-      monto: p.cuota || 0
-    });
-  }
-
-  return arr;
-}
-
-function convertirFecha(f){
-  if(!f) return "";
-
-  if(f.includes("/")){
-    let [d,m,y] = f.split("/");
-    return `${y}-${m}-${d}`;
-  }
-
-  return f;
-}
-  
 }
 function guardarEdicion(){
   const i=parseInt(document.getElementById('ep-idx').value);
@@ -1361,52 +1318,6 @@ window.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('np-inicio').valueAsDate=new Date();
   document.getElementById('f-year').value=String(new Date().getFullYear());
   loadCloud().then(()=>refreshAll()).catch(()=>refreshAll());
-
-// ===== Hitos simple =====
-
-function crearHitos(p){
-  let arr = [];
-  for(let i=0;i<p.meses;i++){
-    let fecha = addMonths(p.inicio,i).slice(0,7);
-    arr.push({
-      mes: fecha,
-      pagado: false,
-      monto: p.cuota || 0
-    });
-  }
-  return arr;
-}
-
-function pintarHitos(p){
-  let cont = document.getElementById("hitosList");
-  if(!cont) return;
-
-  cont.innerHTML = "";
-
-  p.hitos.forEach((h,i)=>{
-    cont.innerHTML += `
-      <div style="border-bottom:1px solid #ddd;margin:5px 0;padding:5px 0">
-        ${h.mes} |
-        <input type="number" value="${h.monto}" onchange="updHito(${i},this.value)">
-        <select onchange="updPago(${i},this.value)">
-          <option ${!h.pagado?"selected":""}>No</option>
-          <option ${h.pagado?"selected":""}>Sí</option>
-        </select>
-      </div>
-    `;
-  });
-}
-
-function updHito(i,val){
-  let idx = document.getElementById("ep-idx").value;
-  proyectos[idx].hitos[i].monto = Number(val);
-}
-
-function updPago(i,val){
-  let idx = document.getElementById("ep-idx").value;
-  proyectos[idx].hitos[i].pagado = (val==="Sí");
-}
-  
 });
 </script>
 </body>
