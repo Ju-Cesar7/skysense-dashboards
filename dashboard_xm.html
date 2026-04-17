@@ -18,16 +18,18 @@ body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;line
 .syne{font-family:'Syne',sans-serif;text-transform:uppercase;}
 .mono{font-family:'DM Mono',monospace;letter-spacing:-0.5px;}
 
+/* Layout principal */
 header{padding:24px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--brd);background:rgba(10,15,30,0.8);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100;}
 main{padding:40px;max-width:1400px;margin:0 auto;width:100%;}
-
 .grid{display:grid;gap:24px;margin-bottom:24px;}
-.card{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:24px;position:relative;overflow:hidden;}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:24px;position:relative;}
 
-/* Estilos de Tabla y Badges */
-table{width:100%;border-collapse:collapse;margin-top:10px;}
+/* Estilos de Tabla */
+table{width:100%;border-collapse:collapse;}
 th{text-align:left;padding:12px;border-bottom:2px solid var(--brd);color:var(--dim);font-size:11px;text-transform:uppercase;}
 td{padding:14px 12px;border-bottom:1px solid var(--brd);font-size:13px;}
+
+/* Badges de Estatus */
 .badge{padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase;}
 .st-Activo{background:rgba(16,185,129,0.1);color:var(--acc);}
 .st-Pipeline{background:rgba(139,92,246,0.1);color:var(--acc5);}
@@ -35,10 +37,9 @@ td{padding:14px 12px;border-bottom:1px solid var(--brd);font-size:13px;}
 .st-Construccion{background:rgba(245,158,11,0.1);color:var(--acc4);}
 
 /* Botones e Inputs */
-.btn{padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;font-size:13px;}
+.btn{padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px;transition:0.2s;}
 .btn-primary{background:var(--acc2);color:white;}
 .btn-outline{background:transparent;border:1px solid var(--brd);color:var(--mid);}
-.btn-outline:hover{border-color:var(--acc2);color:var(--txt);}
 input, select{width:100%;background:var(--sur2);border:1px solid var(--brd);padding:10px;border-radius:6px;color:var(--txt);margin-top:4px;}
 
 /* Modales */
@@ -48,80 +49,45 @@ input, select{width:100%;background:var(--sur2);border:1px solid var(--brd);padd
 </head>
 <body>
 
-<div class="app">
-  <header>
-    <div style="display:flex;align-items:center;gap:16px">
-      <div style="width:40px;height:40px;background:linear-gradient(45deg,var(--acc2),var(--acc5));border-radius:10px"></div>
-      <div>
-        <h1 class="syne" style="font-size:1.2rem;letter-spacing:1px">Skysense · XMs</h1>
-        <p class="mono" style="font-size:10px;color:var(--dim)">PORTFOLIO MANAGEMENT • <span id="hdate"></span></p>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px">
-      <button class="btn btn-outline" onclick="exportExcel()">📊 Exportar Detalle</button>
-      <button class="btn btn-primary" onclick="openModal('m-add')">+ Nuevo Proyecto</button>
-    </div>
-  </header>
+<header>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div style="width:40px;height:40px;background:var(--acc2);border-radius:10px"></div>
+    <div><h1 class="syne">Skysense · XMs</h1><p class="mono" style="font-size:10px;color:var(--dim)" id="hdate"></p></div>
+  </div>
+  <div style="display:flex;gap:12px">
+    <button class="btn btn-outline" onclick="exportExcel()">📊 Exportar Detalle</button>
+    <button class="btn btn-primary" onclick="openModal('m-add')">+ Nuevo Proyecto</button>
+  </div>
+</header>
 
-  <main>
-    <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="card">
-        <label>Total Facility</label>
-        <div class="syne" style="font-size:1.5rem;margin-top:5px">$250.0M</div>
-        <div class="mono" style="font-size:11px;color:var(--acc)">Capacidad Máxima</div>
-      </div>
-      <div class="card">
-        <label>Inversión Activa</label>
-        <div id="kpi-invested" class="syne" style="font-size:1.5rem;margin-top:5px">$0.00</div>
-        <div id="kpi-pct" class="mono" style="font-size:11px;color:var(--acc2)">0% Utilizado</div>
-      </div>
-      <div class="card">
-        <label>Proyectos</label>
-        <div id="kpi-count" class="syne" style="font-size:1.5rem;margin-top:5px">0</div>
-        <div class="mono" style="font-size:11px;color:var(--dim)">En Portafolio</div>
-      </div>
-      <div class="card">
-        <label>Recuperación</label>
-        <div id="kpi-recovery" class="syne" style="font-size:1.5rem;margin-top:5px">$0.00</div>
-        <div class="mono" style="font-size:11px;color:var(--acc4)">Cobrado a la fecha</div>
-      </div>
-    </div>
+<main>
+  <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="card"><label>Total Facility</label><div class="syne" style="font-size:1.5rem">$250.0M</div></div>
+    <div class="card"><label>Inversión Activa</label><div id="kpi-invested" class="syne" style="font-size:1.5rem">$0.00</div></div>
+    <div class="card"><label>Proyectos</label><div id="kpi-count" class="syne" style="font-size:1.5rem">0</div></div>
+    <div class="card"><label>Recuperación</label><div id="kpi-recovery" class="syne" style="font-size:1.5rem">$0.00</div></div>
+  </div>
 
-    <div class="grid" style="grid-template-columns: 2fr 1fr;">
-      <div class="card">
-        <h3 class="syne" style="font-size:0.9rem;margin-bottom:20px">Distribución de Capital</h3>
-        <canvas id="mainChart" height="100"></canvas>
-      </div>
-      <div class="card">
-        <h3 class="syne" style="font-size:0.9rem;margin-bottom:20px">Estatus Proyectos</h3>
-        <canvas id="statusChart"></canvas>
-      </div>
-    </div>
+  <div class="grid" style="grid-template-columns: 2fr 1fr;">
+    <div class="card"><h3 class="syne" style="font-size:0.9rem">Distribución de Capital</h3><canvas id="mainChart" height="100"></canvas></div>
+    <div class="card"><h3 class="syne" style="font-size:0.9rem">Estatus</h3><canvas id="statusChart"></canvas></div>
+  </div>
 
-    <div class="card">
-      <h3 class="syne" style="font-size:0.9rem;margin-bottom:20px">Listado General</h3>
-      <div style="overflow-x:auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Proyecto</th>
-              <th>Estatus</th>
-              <th>Inversión</th>
-              <th>Hitos Pagados</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="p-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-</div>
+  <div class="card">
+    <h3 class="syne" style="font-size:0.9rem;margin-bottom:20px">Portafolio XMs</h3>
+    <table>
+      <thead>
+        <tr><th>Proyecto</th><th>Estatus</th><th>Inversión</th><th>Hitos Pagados</th><th>Acciones</th></tr>
+      </thead>
+      <tbody id="p-body"></tbody>
+    </table>
+  </div>
+</main>
 
 <div id="m-edit" class="modal">
   <div class="modal-content">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <h2 class="syne" style="color:var(--acc2)">Editar Proyecto y Hitos</h2>
+      <h2 class="syne" style="color:var(--acc2)">Control de Cobranza</h2>
       <button class="btn btn-primary" onclick="addHitoRow()">+ Añadir Mensualidad</button>
     </div>
     
@@ -134,23 +100,7 @@ input, select{width:100%;background:var(--sur2);border:1px solid var(--brd);padd
   </div>
 </div>
 
-<div id="m-add" class="modal">
-  <div class="modal-content" style="max-width:500px">
-    <h2 class="syne" style="margin-bottom:20px">Nuevo Proyecto</h2>
-    <label>Nombre</label><input type="text" id="add-nombre">
-    <label>Inversión ($)</label><input type="number" id="add-inversion">
-    <label>Estatus</label>
-    <select id="add-status">
-      <option value="Pipeline">Pipeline</option>
-      <option value="En Construcción">En Construcción</option>
-      <option value="Activo">Active</option>
-    </select>
-    <div style="display:flex;gap:12px;margin-top:20px">
-      <button class="btn btn-outline" onclick="closeModal('m-add')">Cancelar</button>
-      <button class="btn btn-primary" onclick="addNewProyecto()">Crear</button>
-    </div>
-  </div>
-</div>
+<div id="m-add" class="modal"><div class="modal-content" style="max-width:450px"><h2 class="syne">Nuevo Proyecto</h2><label>Nombre</label><input type="text" id="add-nombre"><label>Inversión</label><input type="number" id="add-inversion"><button class="btn btn-primary" style="margin-top:20px" onclick="addNewProyecto()">Crear</button></div></div>
 
 <script>
 let projects = [];
@@ -161,176 +111,111 @@ function openModal(id){ document.getElementById(id).style.display='flex'; }
 function closeModal(id){ document.getElementById(id).style.display='none'; }
 
 function initCharts(){
-  const ctx1 = document.getElementById('mainChart').getContext('2d');
-  charts.main = new Chart(ctx1, {
-    type: 'bar',
-    data: { labels: [], datasets: [{ label: 'Inversión', data: [], backgroundColor: '#3B82F6' }] },
-    options: { responsive: true, scales: { y: { beginAtZero: true, grid: { color: '#1E2D45' } } } }
+  charts.main = new Chart(document.getElementById('mainChart'), {
+    type:'bar', data:{labels:[], datasets:[{label:'Inversión', data:[], backgroundColor:'#3B82F6'}]},
+    options:{responsive:true, scales:{y:{beginAtZero:true, grid:{color:'#1E2D45'}}}}
   });
-
-  const ctx2 = document.getElementById('statusChart').getContext('2d');
-  charts.status = new Chart(ctx2, {
-    type: 'doughnut',
-    data: { labels: ['Activo', 'Pipeline', 'Construcción', 'Cerrado'], datasets: [{ data: [0,0,0,0], backgroundColor: ['#10B981','#8B5CF6','#F59E0B','#EF4444'] }] },
-    options: { plugins: { legend: { position: 'bottom', labels: { color: '#F1F5F9' } } } }
+  charts.status = new Chart(document.getElementById('statusChart'), {
+    type:'doughnut', data:{labels:['Activo','Pipeline','En Construcción','Cerrado'], datasets:[{data:[0,0,0,0], backgroundColor:['#10B981','#8B5CF6','#F59E0B','#EF4444']}]},
+    options:{plugins:{legend:{position:'bottom', labels:{color:'#F1F5F9'}}}}
   });
 }
 
 function refresh() {
   const tbody = document.getElementById('p-body');
   tbody.innerHTML = '';
-  let totalI = 0; let totalR = 0;
-  let statusCounts = { 'Activo':0, 'Pipeline':0, 'En Construcción':0, 'Cerrado':0 };
+  let totalI = 0, totalR = 0, counts = {'Activo':0, 'Pipeline':0, 'En Construcción':0, 'Cerrado':0};
 
   projects.forEach((p, i) => {
     totalI += p.inversion;
-    statusCounts[p.status] = (statusCounts[p.status] || 0) + 1;
-    
+    counts[p.status]++;
     const hitosOk = p.hitos ? p.hitos.filter(h => h.cobrado).length : 0;
-    const totalHitos = p.hitos ? p.hitos.length : 0;
     p.hitos?.forEach(h => { if(h.cobrado) totalR += h.monto; });
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
+    tbody.innerHTML += `<tr>
       <td><strong>${p.nombre}</strong></td>
       <td><span class="badge st-${p.status.replace(' ','')}">${p.status}</span></td>
       <td class="mono">${fmt(p.inversion)}</td>
-      <td class="mono">${hitosOk}/${totalHitos}</td>
-      <td><button class="btn btn-outline" style="padding:5px" onclick="editProyecto(${i})">✏️ Finanzas</button></td>
-    `;
-    tbody.appendChild(tr);
+      <td class="mono">${hitosOk}/${p.hitos?p.hitos.length:0}</td>
+      <td><button class="btn btn-outline" style="padding:6px" onclick="editProyecto(${i})">✏️ Editar</button></td>
+    </tr>`;
   });
 
-  // Update KPIs
   document.getElementById('kpi-invested').textContent = fmt(totalI);
-  document.getElementById('kpi-pct').textContent = ((totalI/250000000)*100).toFixed(1) + "% Utilizado";
   document.getElementById('kpi-count').textContent = projects.length;
   document.getElementById('kpi-recovery').textContent = fmt(totalR);
 
-  // Update Charts
   charts.main.data.labels = projects.map(p => p.nombre);
   charts.main.data.datasets[0].data = projects.map(p => p.inversion);
   charts.main.update();
-
-  charts.status.data.datasets[0].data = [statusCounts['Activo'], statusCounts['Pipeline'], statusCounts['En Construcción'], statusCounts['Cerrado']];
+  charts.status.data.datasets[0].data = Object.values(counts);
   charts.status.update();
 }
 
 function editProyecto(i) {
-  const p = projects[i];
-  if(!p.hitos) p.hitos = [];
-  
-  const body = document.getElementById('edit-body');
-  body.innerHTML = `
-    <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-bottom:20px">
+  const p = projects[i]; if(!p.hitos) p.hitos = [];
+  document.getElementById('edit-body').innerHTML = `
+    <div class="grid" style="grid-template-columns:1fr 1fr; gap:15px">
       <div><label>Nombre</label><input type="text" id="e-nombre" value="${p.nombre}"></div>
-      <div>
-        <label>Estatus</label>
-        <select id="e-status">
-          <option value="Pipeline" ${p.status==='Pipeline'?'selected':''}>Pipeline</option>
-          <option value="En Construcción" ${p.status==='En Construcción'?'selected':''}>En Construcción</option>
-          <option value="Activo" ${p.status==='Activo'?'selected':''}>Activo</option>
-          <option value="Cerrado" ${p.status==='Cerrado'?'selected':''}>Cerrado</option>
-        </select>
-      </div>
+      <div><label>Estatus</label><select id="e-status">
+        <option value="Pipeline" ${p.status==='Pipeline'?'selected':''}>Pipeline</option>
+        <option value="En Construcción" ${p.status==='En Construcción'?'selected':''}>En Construcción</option>
+        <option value="Activo" ${p.status==='Activo'?'selected':''}>Activo</option>
+        <option value="Cerrado" ${p.status==='Cerrado'?'selected':''}>Cerrado</option>
+      </select></div>
+      <div><label>Firma Contrato</label><input type="date" id="e-firma" value="${p.fechaFirma||''}"></div>
       <div><label>Inversión ($)</label><input type="number" id="e-inversion" value="${p.inversion}"></div>
-      <div><label>Firma Contrato</label><input type="date" id="e-firma" value="${p.fechaFirma || ''}"></div>
-      <div><label>Anticipo Pago ($)</label><input type="number" id="e-anticipo-monto" value="${p.anticipoMonto || 0}"></div>
-      <div><label>Fecha Anticipo</label><input type="date" id="e-anticipo-fecha" value="${p.anticipoFecha || ''}"></div>
+      <div><label>Monto Anticipo</label><input type="number" id="e-ant-m" value="${p.anticipoMonto||0}"></div>
+      <div><label>Fecha Anticipo</label><input type="date" id="e-ant-f" value="${p.anticipoFecha||''}"></div>
     </div>
-    <h3 class="syne" style="font-size:0.8rem; color:var(--acc4); margin:20px 0 10px">Hitos de Cobranza (Mensualidades)</h3>
-    <div id="hitos-list" style="border-top:1px solid var(--brd); padding-top:10px">
-      ${p.hitos.map((h, idx) => generateHitoHTML(idx, h)).join('')}
-    </div>
+    <div id="hitos-list" style="margin-top:20px">${p.hitos.map(h => generateHitoHTML(h)).join('')}</div>
     <input type="hidden" id="edit-idx" value="${i}">
   `;
   openModal('m-edit');
 }
 
-function generateHitoHTML(idx, h) {
-  return `
-    <div class="hito-row" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 50px; gap:10px; margin-bottom:10px; align-items:end; background:rgba(255,255,255,0.02); padding:10px; border-radius:8px">
-      <div><label style="font-size:9px">Prog. Pago</label><input type="date" class="h-prog" value="${h.fechaProgramada || ''}"></div>
-      <div><label style="font-size:9px">Monto Cobrado ($)</label><input type="number" class="h-monto" value="${h.monto || 0}"></div>
-      <div><label style="font-size:9px">Fecha Cobro</label><input type="date" class="h-cobro" value="${h.fechaCobro || ''}"></div>
-      <div style="text-align:center"><label style="font-size:9px">¿Cobrado?</label><br><input type="checkbox" class="h-ok" ${h.cobrado?'checked':''} style="width:20px;height:20px;margin-top:5px"></div>
-      <button class="btn" style="background:var(--acc3); padding:5px" onclick="this.parentElement.remove()">✕</button>
-    </div>
-  `;
+function generateHitoHTML(h) {
+  return `<div class="hito-row" style="display:grid; grid-template-columns:1fr 1fr 1fr 0.5fr 40px; gap:10px; margin-bottom:10px; align-items:end; border-bottom:1px solid var(--brd); padding-bottom:10px">
+    <div><label style="font-size:9px">Prog. Pago</label><input type="date" class="h-prog" value="${h.fechaProgramada||''}"></div>
+    <div><label style="font-size:9px">Monto ($)</label><input type="number" class="h-monto" value="${h.monto||0}"></div>
+    <div><label style="font-size:9px">Fecha Cobro</label><input type="date" class="h-cobro" value="${h.fechaCobro||''}"></div>
+    <div style="text-align:center"><label style="font-size:9px">OK</label><br><input type="checkbox" class="h-ok" ${h.cobrado?'checked':''} style="width:20px;height:20px"></div>
+    <button class="btn" style="background:var(--acc3);padding:5px" onclick="this.parentElement.remove()">✕</button>
+  </div>`;
 }
 
-function addHitoRow() {
-  const container = document.getElementById('hitos-list');
-  const div = document.createElement('div');
-  div.innerHTML = generateHitoHTML(Date.now(), { monto: 0 });
-  container.appendChild(div);
-}
+function addHitoRow(){ document.getElementById('hitos-list').insertAdjacentHTML('beforeend', generateHitoHTML({})); }
 
 function saveProyecto() {
-  const i = document.getElementById('edit-idx').value;
-  const p = projects[i];
-
+  const i = document.getElementById('edit-idx').value; const p = projects[i];
   p.nombre = document.getElementById('e-nombre').value;
   p.status = document.getElementById('e-status').value;
   p.inversion = parseFloat(document.getElementById('e-inversion').value);
   p.fechaFirma = document.getElementById('e-firma').value;
-  p.anticipoMonto = parseFloat(document.getElementById('e-anticipo-monto').value);
-  p.anticipoFecha = document.getElementById('e-anticipo-fecha').value;
-
-  const rows = document.querySelectorAll('.hito-row');
-  p.hitos = Array.from(rows).map(row => ({
-    fechaProgramada: row.querySelector('.h-prog').value,
-    monto: parseFloat(row.querySelector('.h-monto').value),
-    fechaCobro: row.querySelector('.h-cobro').value,
-    cobrado: row.querySelector('.h-ok').checked
+  p.anticipoMonto = parseFloat(document.getElementById('e-ant-m').value);
+  p.anticipoFecha = document.getElementById('e-ant-f').value;
+  p.hitos = Array.from(document.querySelectorAll('.hito-row')).map(r => ({
+    fechaProgramada: r.querySelector('.h-prog').value,
+    monto: parseFloat(r.querySelector('.h-monto').value),
+    fechaCobro: r.querySelector('.h-cobro').value,
+    cobrado: r.querySelector('.h-ok').checked
   }));
-
-  closeModal('m-edit');
-  refresh();
-  if (window.saveCloud) saveCloud(); // Mantiene tu conexión a Sheets
-}
-
-function addNewProyecto() {
-  const n = document.getElementById('add-nombre').value;
-  const v = parseFloat(document.getElementById('add-inversion').value);
-  const s = document.getElementById('add-status').value;
-  if(!n || !v) return;
-  projects.push({ nombre:n, inversion:v, status:s, hitos:[] });
-  closeModal('m-add');
-  refresh();
-  if (window.saveCloud) saveCloud();
+  closeModal('m-edit'); refresh(); if(window.saveCloud) saveCloud();
 }
 
 function exportExcel() {
   const data = [];
   projects.forEach(p => {
-    const base = {
-      "Proyecto": p.nombre, "Estatus": p.status, "Inversión": p.inversion,
-      "Firma Contrato": p.fechaFirma || '', "Monto Anticipo": p.anticipoMonto || 0, "Fecha Anticipo": p.anticipoFecha || ''
-    };
-    if (p.hitos && p.hitos.length > 0) {
-      p.hitos.forEach((h, idx) => {
-        const row = { ...base };
-        row["Mensualidad"] = idx + 1;
-        row["Prog. Pago"] = h.fechaProgramada;
-        row["Monto Cobrado"] = h.monto;
-        row["Fecha Cobro Real"] = h.fechaCobro;
-        row["¿Pagado?"] = h.cobrado ? "SI" : "NO";
-        data.push(row);
-      });
-    } else { data.push(base); }
+    const base = {"Proyecto":p.nombre, "Estatus":p.status, "Inversión":p.inversion, "Firma Contrato":p.fechaFirma, "Anticipo $":p.anticipoMonto};
+    if(p.hitos?.length) p.hitos.forEach((h,idx) => data.push({...base, "Mes":idx+1, "Prog":h.fechaProgramada, "Monto":h.monto, "Cobro Real":h.fechaCobro, "Pagado":h.cobrado?'SÍ':'NO'}));
+    else data.push(base);
   });
-  const ws = XLSX.utils.json_to_sheet(data);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Detalle_XMs");
-  XLSX.writeFile(wb, "Skysense_XMs_Finanzas.xlsx");
+  XLSX.writeFile(XLSX.utils.book_new().appendChild(XLSX.utils.json_to_sheet(data), "XMs"), "Reporte_XMs.xlsx");
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('hdate').textContent = new Date().toLocaleDateString();
-  initCharts();
-  // Aquí los datos se cargarán de tu Google Sheets automáticamente
-  refresh(); 
+  initCharts(); refresh();
 });
 </script>
 </body>
