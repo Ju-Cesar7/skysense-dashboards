@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skysense · XMs — P$250M Credit Facility</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#0A0F1E;--sur:#111827;--sur2:#1a2235;--brd:#1E2D45;
+  --acc:#10B981;--acc2:#3B82F6;--acc3:#EF4444;--acc4:#F59E0B;--acc5:#8B5CF6;
+  --txt:#F1F5F9;--dim:#64748B;--mid:#94A3B8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);height:100%;overflow-x:hidden;}
+/* HEADER */
+.hdr{background:#0D1624;border-bottom:1px solid var(--brd);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;gap:8px;flex-wrap:wrap;}
+.hdr-logo{display:flex;align-items:center;gap:8px;}
+.logo-sq{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#3B82F6,#8B5CF6);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;}
+.hdr-name{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;}
+.hdr-sep{color:var(--brd);margin:0 4px;}
+.hdr-sub{font-size:10px;color:var(--dim);font-family:'DM Mono',monospace;}
+.hdr-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.hbadge{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);padding:3px 10px;border-radius:20px;font-size:10px;color:#3B82F6;font-family:'DM Mono',monospace;}
+.hdate{font-size:10px;color:var(--mid);border:1px solid var(--brd);padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;}
+/* ACTION BAR */
+.abar{padding:8px 20px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--brd);background:var(--sur);}
+.sp{flex:1;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer;border:none;transition:all .18s;white-space:nowrap;}
+.btn svg{width:12px;height:12px;flex-shrink:0;}
+.btn-primary{background:var(--acc2);color:#fff;}
+.btn-primary:hover{background:#2563EB;transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,.3);}
+.btn-green{background:#10B981;color:#fff;}
+.btn-green:hover{background:#059669;transform:translateY(-1px);}
+.btn-outline{background:transparent;color:var(--txt);border:1px solid var(--brd);}
+.btn-outline:hover{border-color:var(--acc2);color:var(--acc2);}
+.btn-red{background:transparent;color:var(--acc3);border:1px solid rgba(239,68,68,.3);}
+.btn-red:hover{background:rgba(239,68,68,.08);}
+.btn-purple{background:#8B5CF6;color:#fff;}
+.btn-purple:hover{background:#7C3AED;transform:translateY(-1px);}
+.btn-amber{background:var(--acc4);color:#0a0f1e;}
+.btn-amber:hover{background:#D97706;transform:translateY(-1px);}
+/* TOGGLE PILLS */
+.tgl-grp{display:flex;border:1px solid var(--brd);border-radius:7px;overflow:hidden;background:var(--sur2);}
+.tgl{padding:5px 11px;font-size:10.5px;font-weight:700;cursor:pointer;background:transparent;color:var(--dim);border:none;font-family:'DM Mono',monospace;transition:all .15s;letter-spacing:.3px;}
+.tgl.on{background:var(--acc2);color:#fff;}
+.tgl-grp.green .tgl.on{background:#10B981;}
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--brd);background:var(--sur);padding:0 20px;overflow-x:auto;}
+.tab{padding:10px 18px;font-size:12.5px;font-weight:600;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .18s;user-select:none;white-space:nowrap;}
+.tab.act{color:#3B82F6;border-bottom-color:#3B82F6;}
+/* CONTENT */
+.pg{padding:18px 20px;max-width:1800px;margin:0 auto;}
+.pnl{display:none;}.pnl.act{display:block;}
+/* KPI CARDS */
+.krow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px;}
+.kcard{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden;}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.k1::before{background:var(--acc2);}.k2::before{background:var(--mid);}
+.k3::before{background:var(--acc);}.k4::before{background:var(--acc3);}
+.k5::before{background:var(--acc4);}
+.klbl{font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;font-weight:600;}
+.kval{font-family:'DM Mono',monospace;font-size:16px;font-weight:600;margin-bottom:3px;word-break:break-all;line-height:1.2;}
+.ksub{font-size:9.5px;color:var(--dim);}
+.c1{color:var(--acc2);}.c2{color:var(--mid);}.c3{color:var(--acc);}.c4{color:var(--acc3);}.c5{color:var(--acc4);}
+/* CHART GRID */
+.cgrid2{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:18px;}
+.cgrid22{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.ccard{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px 18px;}
+.ctitle{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:2px;}
+.csub{font-size:9.5px;color:var(--dim);margin-bottom:12px;}
+.chart-wrap{position:relative;}
+/* TABLE */
+.tbl-wrap{background:var(--sur);border:1px solid var(--brd);border-radius:12px;overflow:hidden;margin-bottom:18px;}
+.tbl-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--brd);flex-wrap:wrap;gap:8px;}
+.tbl-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;}
+.fgrp{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.fsel{background:var(--sur2);border:1px solid var(--brd);color:var(--txt);padding:5px 8px;border-radius:6px;font-size:11px;cursor:pointer;outline:none;}
+.srch{display:flex;align-items:center;gap:4px;background:var(--sur2);border:1px solid var(--brd);border-radius:6px;padding:4px 8px;}
+.srch input{background:none;border:none;color:var(--txt);font-size:11px;outline:none;width:130px;}
+.srch input::placeholder{color:var(--dim);}
+.tscr{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:11.5px;}
+thead th{padding:8px 12px;text-align:left;font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;background:var(--sur2);border-bottom:1px solid var(--brd);font-weight:600;white-space:nowrap;}
+th.r,td.r{text-align:right;}
+tbody tr{border-bottom:1px solid rgba(30,45,69,.6);transition:background .12s;cursor:pointer;}
+tbody tr:hover{background:rgba(59,130,246,.04);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:8px 12px;vertical-align:middle;}
+.mono{font-family:'DM Mono',monospace;font-size:10.5px;}
+.pgn{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--brd);flex-wrap:wrap;gap:6px;}
+.pi{font-size:10px;color:var(--dim);}
+.pbtns{display:flex;gap:3px;flex-wrap:wrap;}
+.pbtn{padding:3px 8px;border-radius:5px;border:1px solid var(--brd);background:none;color:var(--txt);font-size:10px;cursor:pointer;}
+.pbtn.act{background:#3B82F6;color:#fff;border-color:#3B82F6;}
+/* PROGRESS BAR */
+.pbar{height:4px;background:var(--brd);border-radius:2px;overflow:hidden;margin-top:3px;}
+.pfill{height:100%;border-radius:2px;}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.4px;}
+.b-green{background:rgba(16,185,129,.15);color:#10B981;}
+.b-blue{background:rgba(59,130,246,.15);color:#3B82F6;}
+.b-amber{background:rgba(245,158,11,.15);color:#F59E0B;}
+.b-red{background:rgba(239,68,68,.15);color:#EF4444;}
+.b-purple{background:rgba(139,92,246,.15);color:#8B5CF6;}
+/* MODAL */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;}
+.moverlay.open{display:flex;}
+.modal{background:var(--sur);border:1px solid var(--brd);border-radius:14px;padding:22px;width:100%;max-width:640px;position:relative;margin:auto;overflow-x:hidden;}
+.modal-xl{max-width:min(96vw,1060px);}
+.mtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.mtitle{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;}
+.mclose{background:none;border:none;color:var(--dim);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;}
+.mclose:hover{color:var(--txt);}
+/* FORM GRID */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fgrid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.f-full{grid-column:1/-1;}
+.frow{display:flex;flex-direction:column;gap:5px;}
+.flbl{font-size:10.5px;color:var(--mid);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.finput{background:var(--sur2);border:1px solid var(--brd);color:var(--txt);padding:8px 10px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12.5px;outline:none;width:100%;}
+.finput:focus{border-color:var(--acc2);}
+.finput option{background:var(--sur2);}
+.fhint{font-size:9.5px;color:var(--dim);}
+/* TYPE SELECTOR */
+.type-sel{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.type-card{border:2px solid var(--brd);border-radius:10px;padding:12px;cursor:pointer;transition:all .15s;}
+.type-card.sel{border-color:var(--acc2);background:rgba(59,130,246,.07);}
+.type-card-title{font-size:12px;font-weight:700;margin-bottom:3px;}
+.type-card-desc{font-size:10px;color:var(--dim);}
+/* HITOS SECTION */
+.hitos-box{background:var(--sur2);border:1px solid var(--brd);border-radius:10px;padding:14px;margin-top:4px;}
+.hito-row{display:grid;grid-template-columns:1fr 1fr 36px;gap:8px;align-items:end;margin-bottom:8px;}
+.hito-add{font-size:11px;color:var(--acc2);cursor:pointer;background:none;border:none;font-weight:600;}
+/* HITOS COBRANZA TABLE (edit modal) */
+.hc-table{width:100%;border-collapse:collapse;font-size:11px;}
+.hc-table th{padding:7px 8px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;background:var(--sur2);border-bottom:1px solid var(--brd);font-weight:700;white-space:nowrap;}
+.hc-table td{padding:4px 5px;vertical-align:middle;border-bottom:1px solid rgba(30,45,69,.5);}
+.hc-table tbody tr:last-child td{border-bottom:none;}
+.hc-inp{background:var(--bg);border:1px solid var(--brd);color:var(--txt);padding:4px 6px;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:11px;outline:none;width:100%;min-width:0;}
+.hc-inp:focus{border-color:var(--acc2);}
+.hc-inp:disabled{opacity:.35;cursor:not-allowed;}
+.hc-inp[readonly]{opacity:.6;background:var(--sur2);}
+.hc-check{width:16px;height:16px;cursor:pointer;accent-color:var(--acc);}
+.hc-val-green{color:var(--acc);font-family:'DM Mono',monospace;}
+.hc-val-amber{color:var(--acc4);font-family:'DM Mono',monospace;}
+/* STATUS INDICATOR */
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;flex-shrink:0;}
+.dot-green{background:#10B981;}.dot-blue{background:#3B82F6;}
+.dot-amber{background:#F59E0B;}.dot-red{background:#EF4444;}
+.dot-purple{background:#8B5CF6;}
+/* DRAG ZONE */
+.dropzone{border:2px dashed var(--brd);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;}
+.dropzone:hover,.dropzone.over{border-color:var(--acc2);background:rgba(59,130,246,.05);}
+.dz-icon{font-size:30px;margin-bottom:8px;}
+.dz-txt{font-size:12px;color:var(--mid);}
+.dz-sub{font-size:10px;color:var(--dim);margin-top:3px;}
+/* RESPONSIVE */
+@media(max-width:1100px){.krow{grid-template-columns:repeat(3,1fr);}
+  .cgrid2{grid-template-columns:1fr;}.cgrid22{grid-template-columns:1fr;}}
+@media(max-width:700px){.krow{grid-template-columns:repeat(2,1fr);}.fgrid,.fgrid-3{grid-template-columns:1fr;}.f-full{grid-column:1;}}
+@media(max-width:480px){.krow{grid-template-columns:1fr;}}
+/* EDIT ROW */
+.edit-icon{opacity:0;transition:opacity .15s;background:none;border:none;color:var(--acc2);cursor:pointer;padding:2px 5px;}
+tbody tr:hover .edit-icon{opacity:1;}
+/* CURRENCY SYMBOL */
+.cur-sym{font-size:9px;vertical-align:super;margin-right:1px;}
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--sur2);border:1px solid var(--acc2);color:var(--txt);padding:10px 18px;border-radius:10px;font-size:12px;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sec-title{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-logo">
+    <div class="logo-sq">SK</div>
+    <div>
+      <div class="hdr-name">Skysense <span class="hdr-sep">·</span> <span style="color:var(--acc2)">XMs</span></div>
+      <div class="hdr-sub">P$250M Credit Facility · Control de Proyectos</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="tgl-grp" id="cgrp" title="Moneda">
+      <button class="tgl on" onclick="setCur('MXN')">MXN</button>
+      <button class="tgl" onclick="setCur('USD')">USD</button>
+    </div>
+    <div class="tgl-grp green" id="igrp" title="IVA">
+      <button class="tgl on" onclick="setIva(false)">Sin IVA</button>
+      <button class="tgl" onclick="setIva(true)">Con IVA</button>
+    </div>
+    <div class="hbadge" id="cur-badge">MXN · Sin IVA</div>
+    <div class="hdate" id="hdate"></div>
+    <div id="sync-status" style="font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#10B981;font-family:'DM Mono',monospace;cursor:pointer" onclick="loadCloud().then(()=>refreshAll())" title="Clic para forzar sincronización">⏳ Cargando...</div>
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;font-size:11px;font-weight:600;background:rgba(59,130,246,.12);color:#3B82F6;border:1px solid rgba(59,130,246,.3);text-decoration:none;white-space:nowrap;">
+      ← Inicio
+    </a>
+  </div>
+</div>
+
+<!-- ACTION BAR -->
+<div class="abar">
+  <button class="btn btn-primary" onclick="openModal('m-nuevo')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Nuevo Proyecto
+  </button>
+  <button class="btn btn-purple" onclick="openModal('m-carga')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    Carga Masiva
+  </button>
+  <div class="sp"></div>
+  <button class="btn btn-outline" onclick="dlTemplate()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Descargar Template
+  </button>
+  <button class="btn btn-green" onclick="exportExcel()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+    Exportar Excel
+  </button>
+  <button class="btn btn-red" onclick="limpiarDatos()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+    Limpiar
+  </button>
+  <button class="btn btn-amber" onclick="backupExcel()" title="Backup completo (Excel) de todos los proyectos e hitos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Backup App
+  </button>
+  <label class="btn btn-outline" style="cursor:pointer" title="Restaurar backup (.json o .xlsx)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    Restaurar Backup
+    <input type="file" accept=".json,.xlsx,.xls" style="display:none" onchange="restoreBackup(this)">
+  </label>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab act" onclick="showTab('t-resumen',this)">📊 Resumen</div>
+  <div class="tab" onclick="showTab('t-proyectos',this)">📁 Proyectos</div>
+  <div class="tab" onclick="showTab('t-flujo',this)">📈 Flujo Mensual</div>
+  <div class="tab" onclick="showTab('t-hitos',this)">🎯 Hitos / Mensualidades</div>
+  <div class="tab" onclick="showTab('t-semanal',this)">📅 Vista Semanal</div>
+</div>
+
+<!-- TAB: RESUMEN -->
+<div class="pg pnl act" id="t-resumen">
+  <!-- KPI ROW -->
+  <div class="krow">
+    <div class="kcard k1">
+      <div class="klbl">Portafolio Total</div>
+      <div class="kval c1" id="k-total">—</div>
+      <div class="ksub" id="k-total-n">— proyectos activos</div>
+    </div>
+    <div class="kcard k3">
+      <div class="klbl">Total Cobrado</div>
+      <div class="kval c3" id="k-cobrado">—</div>
+      <div class="ksub"><div class="pbar"><div class="pfill" id="k-cob-bar" style="background:#10B981;width:0%"></div></div></div>
+    </div>
+    <div class="kcard k4">
+      <div class="klbl">Por Cobrar</div>
+      <div class="kval c4" id="k-porcob">—</div>
+      <div class="ksub" id="k-porcob-s">Saldo pendiente</div>
+    </div>
+    <div class="kcard k5">
+      <div class="klbl">Ingreso Mensual</div>
+      <div class="kval c5" id="k-mensual">—</div>
+      <div class="ksub">Flujo esperado del mes</div>
+    </div>
+    <div class="kcard k2">
+      <div class="klbl">Proyectos</div>
+      <div class="kval c2" id="k-num">—</div>
+      <div class="ksub" id="k-dur">Duración promedio: — meses</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="cgrid2">
+    <div class="ccard">
+      <div class="ctitle">Cobrado vs Pendiente por Proyecto</div>
+      <div class="csub">Top 15 proyectos · Datos reales del portafolio</div>
+      <div class="chart-wrap"><canvas id="ch-bar" height="200"></canvas></div>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">Cobrado vs Por Cobrar</div>
+      <div class="csub">Proporción real del portafolio</div>
+      <div class="chart-wrap" style="max-width:280px;margin:0 auto"><canvas id="ch-donut" height="200"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="cgrid22">
+    <div class="ccard">
+      <div class="ctitle">Flujo Mensual Proyectado</div>
+      <div class="csub">Ingreso real de cuotas mensuales (2026–2033)</div>
+      <div class="chart-wrap"><canvas id="ch-line" height="180"></canvas></div>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">Mensualidades por Duración</div>
+      <div class="csub">Distribución de proyectos por plazo (meses)</div>
+      <div class="chart-wrap"><canvas id="ch-dur" height="180"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: PROYECTOS -->
+<div class="pg pnl" id="t-proyectos">
+  <div class="tbl-wrap">
+    <div class="tbl-head">
+      <div class="tbl-title">Proyectos del Portafolio <span id="cnt-badge" class="badge b-blue" style="margin-left:8px">0</span></div>
+      <div class="fgrp">
+        <div class="srch">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="srch" placeholder="Buscar proyecto..." oninput="renderTable()">
+        </div>
+        <select class="fsel" id="f-dur" onchange="renderTable()">
+          <option value="">Todos los plazos</option>
+          <option value="36">36 meses</option>
+          <option value="48">48 meses</option>
+          <option value="60">60 meses</option>
+          <option value="66">66 meses</option>
+          <option value="72">72 meses</option>
+        </select>
+        <select class="fsel" id="f-tipo" onchange="renderTable()">
+          <option value="">Todos los tipos</option>
+          <option value="mensualidad">Mensualidad</option>
+          <option value="porcentaje">Porcentaje</option>
+        </select>
+      </div>
+    </div>
+    <div class="tscr">
+      <table id="tbl">
+        <thead><tr>
+          <th>Proyecto</th>
+          <th>Tipo</th>
+          <th class="r">Monto Contrato</th>
+          <th class="r">Cobrado</th>
+          <th class="r">Por Cobrar</th>
+          <th class="r">Cuota Mensual</th>
+          <th>Plazo</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th title="Avance = Cobrado ÷ Monto Contrato × 100. Para mensualidades: pagos recibidos ÷ monto total. Para hitos: monto cobrado ÷ monto contrato." style="cursor:help">Avance Cobro ⓘ</th>
+          <th>Estado</th>
+          <th style="min-width:90px">Acciones</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="pgn">
+      <div class="pi" id="pg-info"></div>
+      <div class="pbtns" id="pg-btns"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: FLUJO MENSUAL -->
+<div class="pg pnl" id="t-flujo">
+  <div class="sec-hdr">
+    <div class="sec-title">Flujo Mensual por Proyecto</div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <select class="fsel" id="f-year" onchange="renderFlujo()">
+        <option value="all">Todos los años</option>
+        <option>2025</option><option>2026</option><option>2027</option><option>2028</option>
+        <option>2029</option><option>2030</option><option>2031</option>
+        <option>2032</option><option>2033</option><option>2034</option>
+      </select>
+    </div>
+  </div>
+  <div class="ccard" style="margin-bottom:18px">
+    <div class="ctitle">Flujo Mensual — <span id="flujo-yr">2026</span></div>
+    <div class="csub">Ingresos mensuales por proyecto activo en el año seleccionado</div>
+    <canvas id="ch-flujo" height="160"></canvas>
+  </div>
+  <div class="tbl-wrap">
+    <div class="tbl-head">
+      <div class="tbl-title">Detalle Mensual</div>
+      <div style="display:flex;gap:12px;align-items:center;font-size:10px">
+        <span style="color:var(--acc)">● Cobrado</span>
+        <span style="color:var(--acc4)">● Pendiente</span>
+      </div>
+    </div>
+    <div class="tscr"><table id="tbl-flujo"><thead id="th-flujo"></thead><tbody id="tb-flujo"></tbody></table></div>
+  </div>
+</div>
+
+<!-- TAB: HITOS -->
+<div class="pg pnl" id="t-hitos">
+  <div class="sec-hdr">
+    <div class="sec-title">Mensualidades / Hitos por Proyecto</div>
+    <div class="srch">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="srch-hito" placeholder="Buscar..." oninput="renderHitos()">
+    </div>
+  </div>
+  <div id="hitos-container"></div>
+</div>
+
+<!-- TAB: VISTA SEMANAL -->
+<div class="pg pnl" id="t-semanal">
+  <div class="sec-hdr">
+    <div class="sec-title">📅 Vista Semanal de Cobros</div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="semanalNav(-1)">← Semana anterior</button>
+      <button class="btn btn-outline" onclick="semanalNav(0)">Hoy</button>
+      <button class="btn btn-outline" onclick="semanalNav(1)">Semana siguiente →</button>
+      <span id="sem-label" style="font-size:11px;color:var(--mid);font-family:'DM Mono',monospace;padding:3px 10px;border:1px solid var(--brd);border-radius:20px"></span>
+    </div>
+  </div>
+  <div id="sem-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px"></div>
+  <div id="sem-container"></div>
+</div>
+<div class="moverlay" id="m-view">
+<div class="modal modal-xl">
+  <div class="mtop">
+    <div class="mtitle" id="v-title">Detalle del Proyecto</div>
+    <button class="mclose" onclick="closeModal('m-view')">✕</button>
+  </div>
+  <div id="v-body"></div>
+</div>
+</div>
+
+<!-- ============ MODAL: NUEVO PROYECTO ============ -->
+<div class="moverlay" id="m-nuevo">
+<div class="modal modal-xl">
+  <div class="mtop">
+    <div class="mtitle">➕ Nuevo Proyecto</div>
+    <button class="mclose" onclick="closeModal('m-nuevo')">✕</button>
+  </div>
+
+  <!-- TIPO -->
+  <div style="margin-bottom:18px">
+    <div class="flbl" style="margin-bottom:8px">Tipo de hito</div>
+    <div class="type-sel">
+      <div class="type-card sel" id="tc-men" onclick="setTipo('mensualidad')">
+        <div class="type-card-title">📅 Por Mensualidad</div>
+        <div class="type-card-desc">Montos fijos mensuales durante el plazo del contrato</div>
+      </div>
+      <div class="type-card" id="tc-por" onclick="setTipo('porcentaje')">
+        <div class="type-card-title">📊 Por Porcentaje</div>
+        <div class="type-card-desc">Hitos definidos como % del monto total del proyecto</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO GENERAL -->
+  <div class="fgrid" style="margin-bottom:14px">
+    <div class="frow">
+      <label class="flbl">Nombre del Proyecto *</label>
+      <input class="finput" id="np-nombre" placeholder="Ej. Bidasoa Solar">
+    </div>
+    <div class="frow">
+      <label class="flbl">Monto del Contrato (MXN sin IVA) *</label>
+      <input class="finput" id="np-monto" type="text" placeholder="Ej. 5,000,000" oninput="updPreview();showNpMontoFmt(this)">
+    </div>
+    <div class="frow">
+      <label class="flbl">Monto Cobrado (MXN sin IVA)</label>
+      <input class="finput" id="np-cobrado" type="text" placeholder="0.00">
+    </div>
+    <div class="frow">
+      <label class="flbl">Tipo de Cambio USD/MXN</label>
+      <input class="finput" id="np-tc" type="number" placeholder="17.20" value="17.20">
+    </div>
+  </div>
+
+  <!-- FECHAS Y PLAZO -->
+  <div class="fgrid-3" style="margin-bottom:14px">
+    <div class="frow">
+      <label class="flbl">Fecha Inicio *</label>
+      <input class="finput" id="np-inicio" type="date">
+    </div>
+    <div class="frow" id="blk-mens">
+      <label class="flbl">Número de Mensualidades *</label>
+      <input class="finput" id="np-meses" type="number" placeholder="Ej. 36" min="1" max="120">
+      <span class="fhint">La cuota mensual se calcula automáticamente</span>
+    </div>
+    <div class="frow">
+      <label class="flbl">Estatus</label>
+      <select class="finput" id="np-estatus">
+        <option value="Activo">Activo</option>
+        <option value="En negociación">En negociación</option>
+        <option value="En construcción">En construcción</option>
+        <option value="Concluido">Concluido</option>
+        <option value="Suspendido">Suspendido</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- SECCIÓN HITOS PORCENTAJE -->
+  <div id="blk-pct" style="display:none;margin-bottom:14px">
+    <div class="flbl" style="margin-bottom:8px">Hitos por Porcentaje</div>
+    <div class="hitos-box">
+      <div id="hitos-rows">
+        <div class="hito-row">
+          <div class="frow"><label class="flbl">Descripción</label><input class="finput" placeholder="Ej. Anticipo"></div>
+          <div class="frow"><label class="flbl">% del Contrato</label><input class="finput" type="number" placeholder="30" min="0" max="100"></div>
+          <div class="frow"><label class="flbl">&nbsp;</label><button class="mclose" onclick="removeHito(this)">✕</button></div>
+        </div>
+      </div>
+      <button class="hito-add" onclick="addHito()">+ Agregar Hito</button>
+    </div>
+  </div>
+
+  <!-- NOTAS -->
+  <div class="frow" style="margin-bottom:14px">
+    <label class="flbl">Notas / Observaciones</label>
+    <textarea class="finput" id="np-notas" rows="2" placeholder="Información adicional del proyecto..."></textarea>
+  </div>
+
+  <!-- NUEVOS CAMPOS FINANCIEROS -->
+  <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:14px;margin-bottom:18px">
+    <div style="font-size:10px;color:#3B82F6;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px">📋 Datos Financieros Adicionales</div>
+    <div class="fgrid">
+      <div class="frow">
+        <label class="flbl">Firma de Contrato</label>
+        <input class="finput" id="np-firma" type="date">
+      </div>
+      <div class="frow">
+        <label class="flbl">Monto de Anticipo (MXN sin IVA)</label>
+        <input class="finput" id="np-anticipo" type="text" placeholder="0.00">
+      </div>
+      <div class="frow">
+        <label class="flbl">Fecha de Pago del Anticipo</label>
+        <input class="finput" id="np-fecha-anticipo" type="date">
+      </div>
+      <div class="frow">
+        <label class="flbl">Fecha de Último Pago de Mensualidad</label>
+        <input class="finput" id="np-fecha-mensualidad" type="date">
+        <span class="fhint">Finanzas actualiza este campo cada mes al registrar el cobro</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <div id="np-preview" style="background:var(--sur2);border:1px solid var(--brd);border-radius:8px;padding:12px;margin-bottom:16px;font-size:11px;color:var(--mid);display:none">
+    <strong style="color:var(--txt)">Vista previa:</strong> Cuota mensual estimada: <span id="np-prev-val" class="mono" style="color:var(--acc)">—</span>
+  </div>
+
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn btn-outline" onclick="closeModal('m-nuevo')">Cancelar</button>
+    <button class="btn btn-primary" onclick="guardarProyecto()">Guardar Proyecto</button>
+  </div>
+</div>
+</div>
+
+<!-- ============ MODAL: CARGA MASIVA ============ -->
+<div class="moverlay" id="m-carga">
+<div class="modal">
+  <div class="mtop">
+    <div class="mtitle">📂 Carga Masiva desde Excel</div>
+    <button class="mclose" onclick="closeModal('m-carga')">✕</button>
+  </div>
+  <div class="dropzone" id="dz" onclick="document.getElementById('file-xl').click()"
+    ondragover="event.preventDefault();this.classList.add('over')"
+    ondragleave="this.classList.remove('over')"
+    ondrop="dropFile(event)">
+    <div class="dz-icon">📊</div>
+    <div class="dz-txt">Haz clic o arrastra tu archivo Excel aquí</div>
+    <div class="dz-sub">Formato: .xlsx · Compatible con el template de Carga Datos XMs</div>
+  </div>
+  <input type="file" id="file-xl" accept=".xlsx,.xls" style="display:none" onchange="loadXL(this)">
+  <div id="xl-preview" style="margin-top:14px;display:none">
+    <div style="font-size:11px;color:var(--mid);margin-bottom:8px">Proyectos detectados:</div>
+    <div id="xl-list" style="max-height:200px;overflow-y:auto;font-size:11px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+      <button class="btn btn-outline" onclick="closeModal('m-carga')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-import" onclick="importarXL()">Importar Proyectos</button>
+    </div>
+  </div>
+  <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--brd)">
+    <div style="font-size:10px;color:var(--dim)">💡 El template debe seguir el formato: Proyecto | Mensualidades | Monto Contrato | Pagado | Por Pagar — seguido de columnas de flujo mensual por fecha.</div>
+  </div>
+</div>
+</div>
+
+<!-- ============ MODAL: EDITAR PROYECTO ============ -->
+<div class="moverlay" id="m-edit">
+<div class="modal modal-xl">
+  <div class="mtop">
+    <div class="mtitle">✏️ Editar Proyecto</div>
+    <button class="mclose" onclick="closeModal('m-edit')">✕</button>
+  </div>
+  <div class="fgrid" style="margin-bottom:14px">
+    <div class="frow">
+      <label class="flbl">Nombre</label>
+      <input class="finput" id="ep-nombre">
+    </div>
+    <div class="frow">
+      <label class="flbl">Monto Contrato</label>
+      <input class="finput" id="ep-monto" type="text" oninput="this.value=this.value.replace(/[^0-9.,]/g,'')">
+    </div>
+    <div class="frow">
+      <label class="flbl">Cobrado</label>
+      <input class="finput" id="ep-cobrado" type="text" readonly style="opacity:.7" title="Se calcula automáticamente desde hitos">
+      <span class="fhint" id="ep-cobrado-hint">Si agregas hitos abajo, el cobrado se calcula automáticamente</span>
+    </div>
+    <div class="frow">
+      <label class="flbl">Mensualidades</label>
+      <input class="finput" id="ep-meses" type="number">
+    </div>
+    <div class="frow">
+      <label class="flbl">Inicio</label>
+      <input class="finput" id="ep-inicio" type="date">
+    </div>
+    <div class="frow">
+      <label class="flbl">Tipo de Hito</label>
+      <select class="finput" id="ep-tipo">
+        <option value="mensualidad">Mensualidad fija</option>
+        <option value="porcentaje">Porcentaje de avance</option>
+      </select>
+    </div>
+    <div class="frow">
+      <label class="flbl">Estatus</label>
+      <select class="finput" id="ep-estatus">
+        <option>Activo</option><option>En negociación</option>
+        <option>En construcción</option>
+        <option>Concluido</option><option>Suspendido</option>
+      </select>
+    </div>
+    <div class="frow">
+      <label class="flbl">Notas</label>
+      <input class="finput" id="ep-notas">
+    </div>
+  </div>
+  <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:14px;margin-bottom:14px">
+    <div style="font-size:10px;color:#3B82F6;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px">📋 Datos Financieros Adicionales</div>
+    <div class="fgrid">
+      <div class="frow">
+        <label class="flbl">Firma de Contrato</label>
+        <input class="finput" id="ep-firma" type="date">
+      </div>
+      <div class="frow">
+        <label class="flbl">Monto de Anticipo (MXN sin IVA)</label>
+        <input class="finput" id="ep-anticipo" type="text" placeholder="0.00">
+      </div>
+      <div class="frow">
+        <label class="flbl">Fecha de Pago del Anticipo</label>
+        <input class="finput" id="ep-fecha-anticipo" type="date">
+      </div>
+      <div class="frow">
+        <label class="flbl">Fecha de Último Pago de Mensualidad</label>
+        <input class="finput" id="ep-fecha-mensualidad" type="date">
+        <span class="fhint" style="font-size:9.5px;color:var(--acc4)">⬆️ Finanzas actualiza este campo mensualmente</span>
+      </div>
+    </div>
+  </div>
+  <!-- HITOS DE COBRANZA -->
+  <div style="margin-bottom:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+      <div style="font-size:10px;color:var(--acc4);font-weight:700;text-transform:uppercase;letter-spacing:.6px">🎯 Hitos de Cobranza</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="ep-hito-total" style="font-size:10px;font-weight:700;padding:2px 10px;border-radius:12px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);color:#10B981;font-family:'DM Mono',monospace">Total: 0.0%</span>
+        <button class="hito-add" onclick="addHitoEdit()">+ Agregar hito</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;background:var(--sur2);border:1px solid var(--brd);border-radius:10px;">
+      <table class="hc-table">
+        <thead>
+          <tr>
+            <th style="min-width:130px">Nombre del Hito</th>
+            <th style="min-width:55px;text-align:center" title="Porcentaje del monto total del contrato que representa este hito. Ej: 30% de $1M = $300K S/IVA">% del contrato *</th>
+            <th style="min-width:108px">Monto S/IVA</th>
+            <th style="min-width:108px">Monto C/IVA</th>
+            <th style="min-width:118px">Fecha Prog.</th>
+            <th style="min-width:72px;text-align:center">¿Cobrado?</th>
+            <th style="min-width:108px">Monto Cobrado</th>
+            <th style="min-width:118px">Fecha Cobro</th>
+            <th style="width:28px"></th>
+          </tr>
+        </thead>
+        <tbody id="ep-hitos-body"></tbody>
+      </table>
+    </div>
+    <div style="font-size:9.5px;color:var(--dim);margin-top:5px">💡 El Monto C/IVA se calcula automáticamente (S/IVA × 1.16). Marca ¿Cobrado? para registrar el pago real.</div>
+  </div>
+
+  <input type="hidden" id="ep-idx">
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn btn-red" onclick="eliminarProyecto()">Eliminar</button>
+    <button class="btn btn-outline" onclick="closeModal('m-edit')">Cancelar</button>
+    <button class="btn btn-primary" onclick="guardarEdicion()">Guardar Cambios</button>
+  </div>
+</div>
+</div>
+
+<script>
+const WEB_APP_URL='https://script.google.com/macros/s/AKfycbzQNFVu7cRkjzPOtPRrOAaxs4xbS4spd6-Alvs-CO1RcKGYPvbRS9PU8islKGYRULMY/exec';
+const CLOUD_KEY_XM='sky_xms_v1';
+function syncStatus(msg,color){
+  const el=document.getElementById('sync-status');
+  if(!el)return;
+  el.textContent=msg;
+  el.style.color=color||'#10B981';
+  el.style.borderColor=(color||'#10B981')+'55';
+  el.style.background=(color||'#10B981')+'18';
+}
+function saveCloud(){
+  // Guardar en localStorage inmediatamente
+  try{localStorage.setItem(CLOUD_KEY_XM,JSON.stringify(proyectos));}catch(e){}
+  syncStatus('⏳ Guardando...','#F59E0B');
+  const payload=JSON.stringify({key:CLOUD_KEY_XM,data:proyectos});
+  // Intento 1: POST directo
+  fetch(WEB_APP_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
+    body:payload
+  })
+  .then(()=>{
+    syncStatus('✅ Guardado','#10B981');
+    setTimeout(()=>syncStatus('☁️ Sincronizado','#10B981'),2500);
+  })
+  .catch(()=>{
+    // Intento 2: GET con payload como param
+    const url=WEB_APP_URL+'?action=save&key='+encodeURIComponent(CLOUD_KEY_XM)+'&data='+encodeURIComponent(payload);
+    return fetch(url,{mode:'no-cors'})
+      .then(()=>syncStatus('✅ Guardado (GET)','#10B981'))
+      .catch(()=>syncStatus('⚠️ Solo local — sin conexión a Sheets','#F59E0B'));
+  });
+}
+function loadCloud(){
+  syncStatus('⏳ Cargando...','#3B82F6');
+  // Primero intentar cargar desde Google Sheets
+  return fetch(WEB_APP_URL+'?key='+encodeURIComponent(CLOUD_KEY_XM)+'&t='+Date.now(),{cache:'no-store'})
+    .then(r=>{
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    })
+    .then(json=>{
+      if(json&&json.data&&Array.isArray(json.data)&&json.data.length>0){
+        proyectos=json.data;
+        try{localStorage.setItem(CLOUD_KEY_XM,JSON.stringify(proyectos));}catch(e){}
+        syncStatus('☁️ '+proyectos.length+' proyectos','#10B981');
+      } else if(json&&json.data&&Array.isArray(json.data)&&json.data.length===0){
+        // GAS devolvió array vacío — respetar el borrado
+        proyectos=[];
+        try{localStorage.setItem(CLOUD_KEY_XM,'[]');}catch(e){}
+        syncStatus('☁️ Portafolio vacío','#10B981');
+      } else {
+        // Fallback a localStorage
+        const d=localStorage.getItem(CLOUD_KEY_XM);
+        if(d) try{ const p=JSON.parse(d); if(Array.isArray(p)) proyectos=p; }catch(e){}
+        syncStatus(proyectos.length>0?'📱 Local ('+proyectos.length+')':'📱 Sin datos','#F59E0B');
+      }
+    })
+    .catch(err=>{
+      // GAS no responde → usar localStorage
+      const d=localStorage.getItem(CLOUD_KEY_XM);
+      if(d) try{ const p=JSON.parse(d); if(Array.isArray(p)) proyectos=p; }catch(e){}
+      syncStatus(proyectos.length>0?'⚠️ Sin nube ('+proyectos.length+' local)':'⚠️ Sin conexión','#F59E0B');
+    });
+}
+// ═══════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════════════
+const USD_RATE = 17.20;
+const IVA = 0.16;
+let curMode = 'MXN';
+let ivaMode = false;
+let tipoNuevo = 'mensualidad';
+let pgIdx = 0;
+const PG_SIZE = 15;
+let xlImportData = [];
+
+// ═══════════════════════════════════════════════════════
+// DATA — se carga desde Cloud (GAS) o localStorage
+// Los datos de referencia abajo son solo para carga masiva manual
+// ═══════════════════════════════════════════════════════
+let proyectos = [];
+const _DEMO_DATA = [
+  {nombre:"Alysa",meses:60,monto:10352172.60,cobrado:3968332.83,cuota:172536.21,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Mexcoat",meses:36,monto:10167673.66,cobrado:6496013.72,cuota:282435.38,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Foster Wheeler",meses:36,monto:5563928.48,cobrado:2781964.24,cuota:154553.57,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"DM Fase 1",meses:36,monto:7687968.83,cobrado:5552421.93,cuota:213554.69,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"DM Fase 2",meses:36,monto:5515781.40,cobrado:2757890.70,cuota:153216.15,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Bodesa",meses:36,monto:3154593.72,cobrado:2103062.48,cuota:87627.60,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Credicer",meses:36,monto:1220102.69,cobrado:813401.79,cuota:33891.74,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"IPASA 1",meses:36,monto:14626656.00,cobrado:10969992.00,cuota:406296.00,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"IPASA 2",meses:66,monto:6748784.48,cobrado:1636068.97,cuota:102254.31,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Nuvoil Chico",meses:48,monto:1662924.00,cobrado:1274061.91,cuota:34644.25,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Nuvoil Grande",meses:48,monto:5248192.97,cobrado:437349.41,cuota:109337.35,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Plaza U",meses:48,monto:1615504.14,cobrado:572157.72,cuota:33656.34,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Bidasoa Fotovoltaico",meses:36,monto:19957970.58,cobrado:339874.96,cuota:554388.07,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"UNIDOC",meses:48,monto:9534976.00,cobrado:-1589162.67,cuota:198645.33,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Tejidos y Text",meses:36,monto:8834559.12,cobrado:490808.84,cuota:245404.42,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Clarimex",meses:48,monto:5285456.69,cobrado:-550568.41,cuota:110113.68,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Bidasoa BESS",meses:72,monto:17640000.00,cobrado:-3677704.00,cuota:245000.00,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Bidasoa Xalapa",meses:36,monto:15176340.00,cobrado:421565.00,cuota:421565.00,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Bidasoa Multi Sitios",meses:36,monto:19386842.75,cobrado:1615570.23,cuota:538523.41,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Clarimex 2",meses:72,monto:15506813.79,cobrado:646117.24,cuota:215372.41,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Fisfiber 12",meses:36,monto:3814308.00,cobrado:211906.00,cuota:105953.00,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"Fisfiber 18",meses:36,monto:9683245.86,cobrado:537958.10,cuota:268979.05,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Aguascalientes",meses:72,monto:3250423.84,cobrado:-5894863.92,cuota:45144.78,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Coacalco",meses:72,monto:2851848.86,cobrado:-263140.65,cuota:39609.01,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Coapa",meses:72,monto:5539854.04,cobrado:2806832.21,cuota:76942.42,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Coyoacan",meses:72,monto:1969264.63,cobrado:164105.39,cuota:27350.90,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Del Valle",meses:72,monto:1406617.95,cobrado:97681.80,cuota:19536.36,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Interlomas",meses:72,monto:3119359.25,cobrado:43324.43,cuota:43324.43,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Merida Campestre",meses:72,monto:3165630.998,cobrado:219835.49,cuota:43967.10,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Merida Centro",meses:72,monto:3493213.14,cobrado:242584.25,cuota:48516.85,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Metepec",meses:72,monto:2389700.13,cobrado:99570.84,cuota:33190.28,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Monterrey Centro",meses:72,monto:6591295.67,cobrado:457728.87,cuota:91545.77,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Garza Sada",meses:72,monto:3170712.36,cobrado:352301.37,cuota:44037.67,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM San Jeronimo",meses:72,monto:7532505.10,cobrado:523090.63,cuota:104618.13,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Palomar",meses:72,monto:6026163.44,cobrado:669573.72,cuota:83696.71,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Patria",meses:72,monto:6027189.90,cobrado:167421.94,cuota:83710.97,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Pedregal",meses:72,monto:2780138.59,cobrado:115839.11,cuota:38613.04,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Puebla",meses:72,monto:1874236.41,cobrado:78093.18,cuota:26031.06,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Queretaro",meses:72,monto:2840582.02,cobrado:197262.64,cuota:39452.53,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Satelite",meses:72,monto:1310883.15,cobrado:54620.13,cuota:18206.71,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Tlalne",meses:72,monto:4339977.32,cobrado:301387.31,cuota:60277.46,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Torreón",meses:72,monto:1981527.87,cobrado:82563.66,cuota:27521.22,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Uruguay",meses:72,monto:1438103.32,cobrado:59920.97,cuota:19973.66,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""},
+  {nombre:"FM Veracruz",meses:72,monto:3135045.97,cobrado:217711.53,cuota:43542.31,inicio:"2026-05-01",tipo:"mensualidad",estatus:"Activo",notas:"",firma:"",anticipo:0,fechaAnticipo:"",fechaMensualidad:""}
+]; // fin _DEMO_DATA
+
+function cargarDemoData(){
+  if(!confirm('¿Cargar los '+_DEMO_DATA.length+' proyectos de demostración? Esto sobreescribirá el portafolio actual.')) return;
+  proyectos=JSON.parse(JSON.stringify(_DEMO_DATA));
+  saveCloud();
+  refreshAll();
+  showToast('✅ '+proyectos.length+' proyectos demo cargados');
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILIDADES
+// ═══════════════════════════════════════════════════════
+function conv(v){
+  let val = v;
+  if(ivaMode) val *= (1+IVA);
+  if(curMode==='USD') val /= USD_RATE;
+  return val;
+}
+function fmt(v){
+  const val = conv(v);
+  const sym = curMode==='USD'?'USD $ ':'$ ';
+  return (val<0?'-':'') + sym + Math.abs(val).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2}) + (val<0?' (crédito)':'');
+}
+function fmtRaw(v){ return '$ '+v.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtNum(v){ // rounded 2 decimals, NO commas - for number inputs
+  return (Math.round((v||0)*100)/100).toFixed(2);
+}
+function fmtMoney(v){ // formatted with commas: 3,795,793.98
+  var n=Math.round((v||0)*100)/100;
+  var parts=n.toFixed(2).split('.');
+  parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return parts.join('.');
+}
+function parseMoney(s){ // strip commas for parseFloat
+  return parseFloat((s||'').replace(/,/g,''))||0;
+}
+function dateStr(d){ return new Date(d+'T12:00:00').toLocaleDateString('es-MX',{month:'short',year:'numeric'}); }
+function addMonths(dateStr,n){
+  const d=new Date(dateStr+'T12:00:00');
+  d.setMonth(d.getMonth()+n);
+  return d.toISOString().slice(0,10);
+}
+function pctAvance(p){
+  if(p.monto<=0) return 0;
+  const pag=Math.max(0,p.cobrado);
+  return Math.min(100,(pag/p.monto)*100);
+}
+function estStatusColor(e){
+  const m={Activo:'green',Concluido:'blue','En negociación':'amber','En construcción':'purple',Suspendido:'red'};
+  return m[e]||'blue';
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// ═══════════════════════════════════════════════════════
+// TOGGLES MONEDA / IVA
+// ═══════════════════════════════════════════════════════
+function setCur(m){
+  curMode=m;
+  document.querySelectorAll('#cgrp .tgl').forEach((b,i)=>b.classList.toggle('on',i===(m==='MXN'?0:1)));
+  updBadge(); refreshAll();
+}
+function setIva(v){
+  ivaMode=v;
+  document.querySelectorAll('#igrp .tgl').forEach((b,i)=>b.classList.toggle('on',i===(v?1:0)));
+  updBadge(); refreshAll();
+}
+function updBadge(){
+  document.getElementById('cur-badge').textContent=curMode+(ivaMode?' · Con IVA':' · Sin IVA');
+}
+
+// ═══════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════
+function showTab(id,el){
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));
+  document.getElementById(id).classList.add('act');
+  el.classList.add('act');
+  if(id==='t-flujo') renderFlujo();
+  if(id==='t-hitos') renderHitos();
+  if(id==='t-proyectos') renderTable();
+  if(id==='t-semanal') renderSemanal();
+}
+
+// ═══════════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.moverlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m) m.classList.remove('open');}));
+
+// ═══════════════════════════════════════════════════════
+// NUEVO PROYECTO
+// ═══════════════════════════════════════════════════════
+function setTipo(t){
+  tipoNuevo=t;
+  document.getElementById('tc-men').classList.toggle('sel',t==='mensualidad');
+  document.getElementById('tc-por').classList.toggle('sel',t==='porcentaje');
+  document.getElementById('blk-mens').style.display=t==='mensualidad'?'':'none';
+  document.getElementById('blk-pct').style.display=t==='porcentaje'?'':'none';
+}
+function addHito(){
+  const c=document.createElement('div'); c.className='hito-row';
+  c.innerHTML=`<div class="frow"><label class="flbl">Descripción</label><input class="finput" placeholder="Ej. Finiquito"></div>
+    <div class="frow"><label class="flbl">% del Contrato</label><input class="finput" type="number" placeholder="20" min="0" max="100"></div>
+    <div class="frow"><label class="flbl">&nbsp;</label><button class="mclose" onclick="removeHito(this)">✕</button></div>`;
+  document.getElementById('hitos-rows').appendChild(c);
+}
+function removeHito(b){ b.closest('.hito-row').remove(); }
+
+// Preview cuota
+['np-monto','np-meses'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input',updPreview);
+});
+function showNpMontoFmt(inp){
+  // Live comma formatting for text money inputs
+  var raw=inp.value.replace(/[^0-9.]/g,'');
+  var n=parseFloat(raw)||0;
+  if(n>0){var parts=n.toFixed(2).split('.');parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');inp.value=parts.join('.');}
+}
+function updPreview(){
+  const m=parseMoney(document.getElementById('np-monto').value);
+  const n=parseInt(document.getElementById('np-meses').value)||0;
+  const prev=document.getElementById('np-preview');
+  if(m>0&&n>0&&tipoNuevo==='mensualidad'){
+    prev.style.display='block';
+    document.getElementById('np-prev-val').textContent='$\u202F'+(m/n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})+' /mes';
+  } else prev.style.display='none';
+}
+
+function guardarProyecto(){
+  const nombre=document.getElementById('np-nombre').value.trim();
+  const monto=parseMoney(document.getElementById('np-monto').value);
+  const cobrado=parseMoney(document.getElementById('np-cobrado').value);
+  const meses=parseInt(document.getElementById('np-meses').value)||0;
+  const inicio=document.getElementById('np-inicio').value||'2026-05-01';
+  const estatus=document.getElementById('np-estatus').value;
+  const notas=document.getElementById('np-notas').value;
+  if(!nombre||monto<=0){ showToast('⚠️ Nombre y monto son requeridos'); return; }
+  if(tipoNuevo==='mensualidad'&&meses<=0){ showToast('⚠️ Indica el número de mensualidades'); return; }
+  const cuota=tipoNuevo==='mensualidad'&&meses>0?monto/meses:0;
+  const firma=document.getElementById('np-firma').value;
+  const anticipo=parseMoney(document.getElementById('np-anticipo').value);
+  const fechaAnticipo=document.getElementById('np-fecha-anticipo').value;
+  const fechaMensualidad=document.getElementById('np-fecha-mensualidad').value;
+  proyectos.push({nombre,meses,monto,cobrado,cuota,inicio,tipo:tipoNuevo,estatus,notas,firma,anticipo,fechaAnticipo,fechaMensualidad});
+  saveCloud();
+  closeModal('m-nuevo');
+  ['np-nombre','np-monto','np-cobrado','np-meses','np-notas'].forEach(id=>document.getElementById(id).value='');
+  showToast('✅ Proyecto "'+nombre+'" agregado');
+  refreshAll();
+}
+
+// ═══════════════════════════════════════════════════════
+// HITOS DE COBRANZA — Edit modal helpers
+// ═══════════════════════════════════════════════════════
+function buildHitoRowHTML(h){
+  h=h||{};
+  const cob=h.cobrado?'checked':'';
+  const dis=h.cobrado?'':'disabled';
+  // If montoSIVA is 0/missing but montoCobrado exists, use montoCobrado as reference
+  const mSIVA=h.montoSIVA>0?h.montoSIVA:(h.montoCobrado>0?h.montoCobrado:0);
+  const mCIVA=h.montoCIVA>0?h.montoCIVA:(mSIVA>0?Math.round(mSIVA*1.16*100)/100:0);
+  const mCob=h.montoCobrado>0?h.montoCobrado:(h.cobrado?mSIVA:0);
+  const sivaTxt=mSIVA>0?fmtNum(mSIVA):'';
+  const civaTxt=mCIVA>0?fmtNum(mCIVA):'';
+  const cobTxt=mCob>0?fmtNum(mCob):'';
+  return `
+    <td><input class="hc-inp" value="${h.nombre||''}" placeholder="Ej. Anticipo" style="min-width:130px"></td>
+    <td style="text-align:center"><input class="hc-inp" type="number" value="${h.pct||''}" placeholder="—" min="0" max="100" style="width:55px;text-align:center" oninput="updateHitoTotal()"></td>
+    <td><input class="hc-inp" type="number" value="${sivaTxt}" placeholder="0.00" style="width:110px" oninput="calcCIVArow(this)"></td>
+    <td><input class="hc-inp" type="number" value="${civaTxt}" placeholder="0.00" style="width:110px" readonly></td>
+    <td><input class="hc-inp" type="date" value="${h.fechaProg||''}" style="width:120px"></td>
+    <td style="text-align:center"><input class="hc-check" type="checkbox" ${cob} onchange="toggleCobradoRow(this)"></td>
+    <td><input class="hc-inp" type="number" value="${cobTxt}" placeholder="0.00" style="width:110px" ${dis}></td>
+    <td><input class="hc-inp" type="date" value="${h.fechaCobro||''}" style="width:120px" ${dis}></td>
+    <td><button class="mclose" style="color:var(--acc3)" onclick="this.closest('tr').remove();updateHitoTotal()" title="Eliminar fila">✕</button></td>`;
+}
+function addHitoEdit(){
+  const tbody=document.getElementById('ep-hitos-body');
+  const tr=document.createElement('tr');
+  tr.innerHTML=buildHitoRowHTML({});
+  tbody.appendChild(tr);
+  updateHitoTotal();
+}
+function calcCIVArow(inp){
+  const tr=inp.closest('tr');
+  const civInp=tr.querySelectorAll('.hc-inp')[3];
+  const val=parseFloat(inp.value)||0;
+  civInp.value=val>0?(val*1.16).toFixed(2):'';
+}
+function toggleCobradoRow(cb){
+  const tr=cb.closest('tr');
+  const inputs=tr.querySelectorAll('.hc-inp');
+  // inputs[5]=montoCobrado, inputs[6]=fechaCobro
+  inputs[5].disabled=!cb.checked;
+  inputs[6].disabled=!cb.checked;
+  if(!cb.checked){ inputs[5].value=''; inputs[6].value=''; }
+}
+function updateHitoTotal(){
+  const rows=document.querySelectorAll('#ep-hitos-body tr');
+  let tot=0;
+  rows.forEach(tr=>{
+    const inp=tr.querySelectorAll('.hc-inp')[1];
+    tot+=parseFloat(inp?.value)||0;
+  });
+  const el=document.getElementById('ep-hito-total');
+  if(!el) return;
+  el.textContent='Total: '+tot.toFixed(1)+'%';
+  el.style.color=Math.abs(tot-100)<0.01?'#10B981':'#F59E0B';
+  el.style.background=Math.abs(tot-100)<0.01?'rgba(16,185,129,.12)':'rgba(245,158,11,.12)';
+  el.style.borderColor=Math.abs(tot-100)<0.01?'rgba(16,185,129,.25)':'rgba(245,158,11,.25)';
+}
+function collectHitosEdit(){
+  const rows=document.querySelectorAll('#ep-hitos-body tr');
+  const hitos=[];
+  rows.forEach(tr=>{
+    const inputs=tr.querySelectorAll('.hc-inp');
+    const check=tr.querySelector('.hc-check');
+    if(!inputs.length) return;
+    const nombre=(inputs[0]?.value||'').trim();
+    if(!nombre) return;
+    // indices: 0=nombre,1=pct,2=montoSIVA,3=montoCIVA(readonly),4=fechaProg,5=montoCobrado,6=fechaCobro
+    hitos.push({
+      nombre,
+      pct: parseFloat(inputs[1]?.value)||0,
+      montoSIVA: parseFloat(inputs[2]?.value)||0,
+      montoCIVA: parseFloat(inputs[3]?.value)||0,
+      fechaProg: inputs[4]?.value||'',
+      cobrado: check?check.checked:false,
+      montoCobrado: parseFloat(inputs[5]?.value)||0,
+      fechaCobro: inputs[6]?.value||''
+    });
+  });
+  return hitos;
+}
+function renderHitosEdit(hitos){
+  const tbody=document.getElementById('ep-hitos-body');
+  tbody.innerHTML='';
+  (hitos||[]).forEach(h=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=buildHitoRowHTML(h);
+    tbody.appendChild(tr);
+  });
+  updateHitoTotal();
+}
+
+// ═══════════════════════════════════════════════════════
+// EDITAR PROYECTO
+// ═══════════════════════════════════════════════════════
+function editProyecto(i){
+  const p=proyectos[i];
+  document.getElementById('ep-idx').value=i;
+  document.getElementById('ep-nombre').value=p.nombre;
+  document.getElementById('ep-monto').value=fmtMoney(p.monto);
+  // cobrado: calcula desde hitos si existen, sino usa el valor guardado
+  const cobCalc=p.hitosCobranza&&p.hitosCobranza.length>0
+    ? p.hitosCobranza.filter(h=>h.cobrado).reduce((a,h)=>a+(h.montoCobrado||h.montoSIVA||0),0)
+    : p.cobrado;
+  document.getElementById('ep-cobrado').value=fmtMoney(Math.max(0,cobCalc));
+  document.getElementById('ep-meses').value=p.meses;
+  document.getElementById('ep-inicio').value=p.inicio;
+  document.getElementById('ep-tipo').value=p.tipo;
+  document.getElementById('ep-estatus').value=p.estatus||'Activo';
+  document.getElementById('ep-notas').value=p.notas||'';
+  document.getElementById('ep-firma').value=p.firma||'';
+  document.getElementById('ep-anticipo').value=p.anticipo?fmtMoney(p.anticipo):'';
+  document.getElementById('ep-fecha-anticipo').value=p.fechaAnticipo||'';
+  document.getElementById('ep-fecha-mensualidad').value=p.fechaMensualidad||'';
+  renderHitosEdit(p.hitosCobranza||[]);
+  openModal('m-edit');
+}
+function guardarEdicion(){
+  const i=parseInt(document.getElementById('ep-idx').value);
+  const p=proyectos[i];
+  p.nombre=document.getElementById('ep-nombre').value;
+  p.monto=parseMoney(document.getElementById('ep-monto').value);
+  p.meses=parseInt(document.getElementById('ep-meses').value)||0;
+  p.inicio=document.getElementById('ep-inicio').value;
+  p.tipo=document.getElementById('ep-tipo').value;
+  p.estatus=document.getElementById('ep-estatus').value;
+  p.notas=document.getElementById('ep-notas').value;
+  p.firma=document.getElementById('ep-firma').value;
+  p.anticipo=parseMoney(document.getElementById('ep-anticipo').value);
+  p.fechaAnticipo=document.getElementById('ep-fecha-anticipo').value;
+  p.fechaMensualidad=document.getElementById('ep-fecha-mensualidad').value;
+  p.cuota=p.tipo==='mensualidad'&&p.meses>0?p.monto/p.meses:p.cuota;
+  p.hitosCobranza=collectHitosEdit();
+  // Auto-calcular cobrado desde hitos si existen y alguno está marcado
+  // Si existen hitos pero NINGUNO está cobrado, conservar el cobrado original (no resetear a 0)
+  if(p.hitosCobranza&&p.hitosCobranza.length>0){
+    const cobradoHitos=p.hitosCobranza.filter(h=>h.cobrado).reduce((a,h)=>a+(h.montoCobrado||0),0);
+    if(cobradoHitos>0){
+      p.cobrado=cobradoHitos; // usar suma real de hitos cobrados
+    }
+    // si cobradoHitos===0 y hay hitos, conservar el cobrado manual del campo
+    // para no resetear el avance a 0%
+    else {
+      const manualCob=parseMoney(document.getElementById('ep-cobrado').value);
+      p.cobrado=manualCob;
+    }
+  } else {
+    p.cobrado=parseMoney(document.getElementById('ep-cobrado').value);
+  }
+  saveCloud();
+  closeModal('m-edit');
+  showToast('✅ Proyecto actualizado');
+  refreshAll();
+}
+function eliminarProyecto(){
+  const i=parseInt(document.getElementById('ep-idx').value);
+  const n=proyectos[i].nombre;
+  if(!confirm('¿Eliminar "'+n+'"?')) return;
+  proyectos.splice(i,1);
+  saveCloud();
+  closeModal('m-edit');
+  showToast('🗑️ Proyecto eliminado');
+  refreshAll();
+}
+
+// ═══════════════════════════════════════════════════════
+// CARGA MASIVA EXCEL
+// ═══════════════════════════════════════════════════════
+function dropFile(e){
+  e.preventDefault();
+  document.getElementById('dz').classList.remove('over');
+  const file=e.dataTransfer.files[0];
+  if(file) parseXLFile(file);
+}
+function loadXL(inp){ if(inp.files[0]) parseXLFile(inp.files[0]); }
+function parseXLFile(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+    xlImportData=[];
+    // Buscar filas de datos (col 2=proyecto, col 3=mensualidades, col 4=monto)
+    for(let r=0;r<data.length;r++){
+      const row=data[r];
+      const nombre=row[2]; const meses=row[3]; const monto=row[4];
+      if(nombre&&typeof nombre==='string'&&nombre.trim()&&typeof monto==='number'&&monto>0&&typeof meses==='number'){
+        const cobrado=typeof row[5]==='number'?row[5]:0;
+        const cuota=meses>0?monto/meses:0;
+        xlImportData.push({nombre:nombre.trim(),meses,monto,cobrado,cuota,inicio:'2026-05-01',tipo:'mensualidad',estatus:'Activo',notas:'XL Import'});
+      }
+    }
+    const listEl=document.getElementById('xl-list');
+    if(xlImportData.length===0){ listEl.innerHTML='<div style="color:var(--acc3)">No se encontraron proyectos válidos. Verifica el formato.</div>'; }
+    else {
+      listEl.innerHTML=xlImportData.map((p,i)=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd)">
+        <span>${i+1}. ${p.nombre}</span>
+        <span class="mono" style="color:var(--acc4)">${fmtRaw(p.monto)}</span></div>`).join('');
+    }
+    document.getElementById('xl-preview').style.display='block';
+  };
+  reader.readAsArrayBuffer(file);
+}
+function importarXL(){
+  if(!xlImportData.length){ showToast('⚠️ No hay datos para importar'); return; }
+  // Evitar duplicados
+  let added=0;
+  xlImportData.forEach(p=>{
+    if(!proyectos.find(x=>x.nombre===p.nombre)){ proyectos.push(p); added++; }
+  });
+  closeModal('m-carga');
+  xlImportData=[];
+  document.getElementById('xl-preview').style.display='none';
+  saveCloud();
+  showToast(`✅ ${added} proyectos importados`);
+  refreshAll();
+}
+
+// ═══════════════════════════════════════════════════════
+// DESCARGAR TEMPLATE
+// ═══════════════════════════════════════════════════════
+function dlTemplate(){
+  const wb=XLSX.utils.book_new();
+  const header=[['','Skysense','','','','','',''],
+    ['','P$250M Credit Facility'],[''],
+    ['','BoP','','','','','','','May-26','Jun-26','Jul-26','Ago-26'],
+    ['','EoP','','','','','','','31-May-26','30-Jun-26','31-Jul-26','31-Ago-26'],
+    ['','Year','','','','','','','2026','2026','2026','2026'],
+    ['','Month','','','','','','','5','6','7','8'],
+    ['','Day','','','','','','','31','30','31','31'],
+    [''],
+    ['','','Proyecto','Mensualidades','Monto Contrato','Pagado','Por Pagar','','May-26','Jun-26','Jul-26','Ago-26'],
+    ['','','Ejemplo',36,5000000,2500000,2500000,'',138888.89,138888.89,138888.89,138888.89]
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(header);
+  ws['!cols']=[{wch:4},{wch:20},{wch:25},{wch:14},{wch:16},{wch:14},{wch:14},{wch:5},{wch:12},{wch:12},{wch:12},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
+  XLSX.writeFile(wb,'Template_Carga_XMs.xlsx');
+  showToast('📥 Template descargado');
+}
+
+// ═══════════════════════════════════════════════════════
+// EXPORTAR EXCEL
+// ═══════════════════════════════════════════════════════
+function exportExcel(){
+  const wb=XLSX.utils.book_new();
+
+  // ── HOJA 1: RESUMEN PROYECTOS ──────────────────────────
+  const rows=[['Proyecto','Tipo','Monto Contrato','Cobrado','Por Cobrar','Cuota Mensual','Mensualidades','Inicio','Fin','% Avance','Estatus','Firma Contrato','Fecha Pago Anticipo','Anticipo (MXN s/IVA)']];
+  proyectos.forEach(p=>{
+    const porcob=p.monto-Math.max(0,p.cobrado);
+    const fin=addMonths(p.inicio,p.meses);
+    rows.push([
+      p.nombre, p.tipo,
+      conv(p.monto), conv(Math.max(0,p.cobrado)), conv(porcob), conv(p.cuota),
+      p.meses, p.inicio, fin, pctAvance(p).toFixed(1)+'%', p.estatus,
+      p.firma||'', p.fechaAnticipo||'', p.anticipo||0
+    ]);
+  });
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:28},{wch:14},{wch:18},{wch:16},{wch:16},{wch:16},{wch:14},{wch:12},{wch:12},{wch:10},{wch:14},{wch:16},{wch:20},{wch:20}];
+  XLSX.utils.book_append_sheet(wb,ws,'Proyectos');
+
+  // ── HOJA 2: HITOS DE COBRANZA ──────────────────────────
+  const hRows=[['Proyecto','Nombre del Hito','% del Contrato','Monto S/IVA','Monto C/IVA','Fecha Programada','¿Cobrado?','Monto Cobrado','Fecha de Cobro']];
+  proyectos.forEach(p=>{
+    if(p.hitosCobranza&&p.hitosCobranza.length){
+      p.hitosCobranza.forEach(h=>{
+        hRows.push([
+          p.nombre,
+          h.nombre||'',
+          h.pct||0,
+          h.montoSIVA||0,
+          h.montoCIVA||0,
+          h.fechaProg||'',
+          h.cobrado?'Sí':'No',
+          h.montoCobrado||0,
+          h.fechaCobro||''
+        ]);
+      });
+    } else {
+      hRows.push([p.nombre,'(sin hitos registrados)','','','','','','','']);
+    }
+  });
+  const ws2=XLSX.utils.aoa_to_sheet(hRows);
+  ws2['!cols']=[{wch:28},{wch:22},{wch:14},{wch:16},{wch:16},{wch:16},{wch:10},{wch:16},{wch:16}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Hitos_Cobranza');
+
+  const fname=`XMs_Export_${curMode}${ivaMode?'_IVA':''}_${new Date().toISOString().slice(0,10)}.xlsx`;
+  XLSX.writeFile(wb,fname);
+  showToast('📊 Excel exportado: '+fname);
+}
+
+// ═══════════════════════════════════════════════════════
+// LIMPIAR
+// ═══════════════════════════════════════════════════════
+function limpiarDatos(){
+  if(!confirm('⚠️ Esta acción eliminará TODOS los proyectos del portafolio en este dispositivo Y enviará el borrado a la nube.\n\n¿Deseas continuar?')) return;
+  proyectos=[];
+  try{localStorage.removeItem(CLOUD_KEY_XM);localStorage.setItem(CLOUD_KEY_XM,'[]');}catch(e){}
+  saveCloud();
+  refreshAll();
+  showToast('🗑️ Portafolio limpiado');
+}
+
+// ═══════════════════════════════════════════════════════
+// BACKUP / RESTORE JSON (sincronización manual)
+// ═══════════════════════════════════════════════════════
+function backupJSON(){
+  const data={version:'sky_xms_v1',fecha:new Date().toISOString(),proyectos};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='XMs_Backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  showToast('📦 Backup JSON descargado');
+}
+
+// ─── BACKUP APP (Excel completo) ────────────────────────
+function backupExcel(){
+  const wb=XLSX.utils.book_new();
+  const h1=[['SKYSENSE — XMs P$250M — BACKUP COMPLETO'],['Generado: '+new Date().toLocaleString('es-MX')],[''],
+    ['Proyecto','Tipo','Monto Contrato','Cobrado','Por Cobrar','Cuota Mensual','Mensualidades','Inicio','Fin','% Avance','Estatus','Firma','Anticipo s/IVA','Fecha Anticipo','Última Mensualidad','Notas']];
+  proyectos.forEach(p=>{
+    const porcob=p.monto-Math.max(0,p.cobrado);
+    const fin=addMonths(p.inicio,p.meses);
+    h1.push([p.nombre,p.tipo,p.monto,Math.max(0,p.cobrado),porcob,p.cuota,p.meses,p.inicio,fin,pctAvance(p).toFixed(1)+'%',p.estatus,p.firma||'',p.anticipo||0,p.fechaAnticipo||'',p.fechaMensualidad||'',p.notas||'']);
+  });
+  const ws1=XLSX.utils.aoa_to_sheet(h1);
+  ws1['!cols']=[{wch:28},{wch:14},{wch:16},{wch:14},{wch:14},{wch:14},{wch:14},{wch:12},{wch:12},{wch:10},{wch:16},{wch:14},{wch:16},{wch:14},{wch:18},{wch:30}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Proyectos');
+  const h2=[['Proyecto','Hito','% del Contrato','Monto S/IVA','Monto C/IVA','Fecha Prog.','¿Cobrado?','Monto Cobrado','Fecha Cobro']];
+  proyectos.forEach(p=>{
+    if(p.hitosCobranza&&p.hitosCobranza.length){
+      p.hitosCobranza.forEach(h=>h2.push([p.nombre,h.nombre||'',h.pct||0,h.montoSIVA||0,h.montoCIVA||0,h.fechaProg||'',h.cobrado?'Sí':'No',h.montoCobrado||0,h.fechaCobro||'']));
+    } else { h2.push([p.nombre,'(sin hitos registrados)','','','','','','','']); }
+  });
+  const ws2=XLSX.utils.aoa_to_sheet(h2);
+  ws2['!cols']=[{wch:28},{wch:22},{wch:14},{wch:16},{wch:16},{wch:16},{wch:10},{wch:16},{wch:16}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Hitos_Cobranza');
+  XLSX.writeFile(wb,'XMs_BackupApp_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  showToast('📊 Backup Excel generado — '+proyectos.length+' proyectos');
+}
+
+// ─── RESTORE BACKUP (JSON o Excel) ──────────────────────
+function restoreBackup(inp){
+  const file=inp.files[0]; if(!file) return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='json'){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const data=JSON.parse(e.target.result);
+        const arr=data.proyectos||data.data||data;
+        if(!Array.isArray(arr)||arr.length===0){showToast('⚠️ Backup sin proyectos válidos');return;}
+        if(!confirm('¿Restaurar '+arr.length+' proyectos desde el backup JSON?\nEsto sobreescribirá los datos actuales.'))return;
+        proyectos=arr; saveCloud(); refreshAll();
+        showToast('✅ '+arr.length+' proyectos restaurados desde JSON');
+      }catch(ex){showToast('⚠️ Error al leer el archivo JSON');}
+    };
+    reader.readAsText(file);
+  } else if(['xlsx','xls'].includes(ext)){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+        const ws=wb.Sheets['Proyectos']||wb.Sheets[wb.SheetNames[0]];
+        const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+        const dataRows=rows.filter(r=>r['Proyecto']&&parseFloat(r['Monto Contrato'])>0);
+        if(!dataRows.length){showToast('⚠️ No se encontraron proyectos válidos en el Excel');return;}
+        if(!confirm('¿Restaurar '+dataRows.length+' proyectos desde el Excel?'))return;
+        proyectos=dataRows.map(r=>({
+          nombre:r['Proyecto']||'',tipo:r['Tipo']||'mensualidad',monto:parseFloat(r['Monto Contrato'])||0,
+          cobrado:parseFloat(r['Cobrado'])||0,cuota:parseFloat(r['Cuota Mensual'])||0,
+          meses:parseInt(r['Mensualidades'])||0,inicio:r['Inicio']||'2026-05-01',
+          estatus:r['Estatus']||'Activo',firma:r['Firma']||'',anticipo:parseFloat(r['Anticipo s/IVA'])||0,
+          fechaAnticipo:r['Fecha Anticipo']||'',fechaMensualidad:r['Última Mensualidad']||'',
+          notas:r['Notas']||'',hitosCobranza:[]
+        }));
+        saveCloud(); refreshAll();
+        showToast('✅ '+proyectos.length+' proyectos restaurados desde Excel');
+      }catch(ex){showToast('⚠️ Error al leer el Excel: '+ex.message);}
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  inp.value='';
+}
+function restoreJSON(inp){restoreBackup(inp);}
+
+// ─── EXPORT PROYECTO INDIVIDUAL A EXCEL ─────────────────
+function exportProyecto(i){
+  const p=proyectos[i]; if(!p) return;
+  const wb=XLSX.utils.book_new();
+  const fin=addMonths(p.inicio,p.meses);
+  const porcob=p.monto-Math.max(0,p.cobrado);
+  const ws1=[
+    ['SKYSENSE — DETALLE DE PROYECTO'],[''],
+    ['Proyecto',p.nombre],['Tipo',p.tipo],['Estatus',p.estatus],
+    ['Monto Contrato',p.monto],['Cobrado',Math.max(0,p.cobrado)],['Por Cobrar',porcob],
+    ['Cuota Mensual',p.cuota],['Mensualidades',p.meses],
+    ['Inicio',p.inicio],['Fin Estimado',fin],['% Avance Cobro',pctAvance(p).toFixed(1)+'%'],
+    ['Firma Contrato',p.firma||''],['Anticipo',p.anticipo||0],['Fecha Anticipo',p.fechaAnticipo||''],
+    ['Notas',p.notas||'']
+  ];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(ws1),'Resumen');
+  const ws2=[['Hito','% Contrato','Monto S/IVA','Monto C/IVA','Fecha Prog.','¿Cobrado?','Monto Cobrado','Fecha Cobro']];
+  if(p.hitosCobranza&&p.hitosCobranza.length){
+    p.hitosCobranza.forEach(h=>ws2.push([h.nombre||'',h.pct||0,h.montoSIVA||0,h.montoCIVA||0,h.fechaProg||'',h.cobrado?'Sí':'No',h.montoCobrado||0,h.fechaCobro||'']));
+  } else {
+    // Generar mensualidades automáticas
+    for(let m=0;m<p.meses;m++){
+      const fecha=addMonths(p.inicio,m);
+      const paymentsReceived=Math.max(0,Math.floor((p.cobrado||0)/p.cuota));
+      const cobrado=m<paymentsReceived;
+      ws2.push(['Mensualidad '+(m+1),'',p.cuota,p.cuota*1.16,fecha,cobrado?'Sí':'No',cobrado?p.cuota:0,'']);
+    }
+  }
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(ws2),'Hitos_Mensualidades');
+  XLSX.writeFile(wb,'XMs_'+p.nombre.replace(/[^a-z0-9]/gi,'_')+'_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  showToast('📊 Excel exportado: '+p.nombre);
+}
+
+// ─── SORTING ────────────────────────────────────────────
+let _sortCol='nombre', _sortDir=1;
+function setSort(col){
+  if(_sortCol===col) _sortDir*=-1; else {_sortCol=col;_sortDir=1;}
+  document.querySelectorAll('th.sortable').forEach(th=>{
+    th.classList.remove('asc','desc');
+    if(th.onclick&&th.getAttribute('onclick')&&th.getAttribute('onclick').includes("'"+col+"'")){
+      th.classList.add(_sortDir>0?'asc':'desc');
+    }
+  });
+  pgIdx=0; renderTable();
+}
+
+// ─── VISTA SEMANAL ──────────────────────────────────────
+let _semOffset=0;
+function semanalNav(n){
+  _semOffset=n===0?0:_semOffset+n;
+  renderSemanal();
+}
+function renderSemanal(){
+  const today=new Date();
+  const dow=today.getDay();
+  const diffToMon=dow===0?-6:1-dow;
+  const weekStart=new Date(today);
+  weekStart.setDate(today.getDate()+diffToMon+_semOffset*7);
+  weekStart.setHours(0,0,0,0);
+  const weekEnd=new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate()+6);
+  weekEnd.setHours(23,59,59,999);
+  const fmt2=d=>d.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+  const el=document.getElementById('sem-label');
+  if(el) el.textContent='Semana del '+fmt2(weekStart)+' al '+fmt2(weekEnd);
+  // Recopilar hitos de la semana
+  const semHitos=[];
+  proyectos.forEach((p,pi)=>{
+    const hlist=p.hitosCobranza&&p.hitosCobranza.length?p.hitosCobranza:
+      Array.from({length:p.meses},(_,m)=>{
+        const fecha=addMonths(p.inicio,m);
+        const paymentsReceived=Math.max(0,Math.floor((p.cobrado||0)/p.cuota));
+        return {nombre:'Mensualidad '+(m+1),fechaProg:fecha,cobrado:m<paymentsReceived,montoCobrado:p.cuota,montoSIVA:p.cuota,pct:null};
+      });
+    hlist.forEach(h=>{
+      if(!h.fechaProg) return;
+      const fd=new Date(h.fechaProg+'T12:00:00');
+      if(fd>=weekStart&&fd<=weekEnd){
+        semHitos.push({proyecto:p.nombre,proyIdx:pi,hito:h.nombre||'—',monto:h.montoSIVA||p.cuota,cobrado:h.cobrado,fecha:h.fechaProg,fechaCobro:h.fechaCobro||''});
+      }
+    });
+  });
+  semHitos.sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  // KPIs
+  const totalSem=semHitos.reduce((s,h)=>s+h.monto,0);
+  const cobSem=semHitos.filter(h=>h.cobrado).reduce((s,h)=>s+h.monto,0);
+  const penSem=totalSem-cobSem;
+  const kpiEl=document.getElementById('sem-kpis');
+  if(kpiEl) kpiEl.innerHTML=`
+    <div class="kcard k1"><div class="klbl">Hitos esta semana</div><div class="kval c1">${semHitos.length}</div><div class="ksub">${semHitos.filter(h=>h.cobrado).length} cobrados · ${semHitos.filter(h=>!h.cobrado).length} pendientes</div></div>
+    <div class="kcard k3"><div class="klbl">Total Semana</div><div class="kval c3">${fmt(totalSem)}</div><div class="ksub">Monto S/IVA programado</div></div>
+    <div class="kcard k5"><div class="klbl">Cobrado</div><div class="kval c5">${fmt(cobSem)}</div><div class="ksub">${totalSem>0?((cobSem/totalSem)*100).toFixed(0):0}% del total semanal</div></div>
+    <div class="kcard k4"><div class="klbl">Pendiente</div><div class="kval c4">${fmt(penSem)}</div><div class="ksub">Por cobrar esta semana</div></div>`;
+  // Agrupar por día
+  const DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  const byDay={};
+  semHitos.forEach(h=>{
+    const fd=new Date(h.fecha+'T12:00:00');
+    const d=fd.getDay(); const k=d===0?6:d-1;
+    if(!byDay[k]) byDay[k]=[];
+    byDay[k].push(h);
+  });
+  const cont=document.getElementById('sem-container');
+  if(!cont) return;
+  if(!semHitos.length){
+    cont.innerHTML='<div style="text-align:center;padding:60px;color:var(--dim)">📭 Sin hitos programados para esta semana</div>';
+    return;
+  }
+  let html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">';
+  for(let d=0;d<7;d++){
+    const items=byDay[d]||[];
+    const dayDate=new Date(weekStart); dayDate.setDate(weekStart.getDate()+d);
+    const isToday=dayDate.toDateString()===today.toDateString();
+    html+=`<div style="background:var(--sur);border:1px solid ${isToday?'var(--acc)':'var(--brd)'};border-radius:10px;overflow:hidden">
+      <div style="padding:8px 12px;background:${isToday?'rgba(16,185,129,.15)':'var(--sur2)'};border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:12px;color:${isToday?'var(--acc)':'var(--txt)'}">${DIAS[d]}</span>
+        <span style="font-size:10px;color:var(--dim)">${dayDate.toLocaleDateString('es-MX',{day:'2-digit',month:'short'})}</span>
+      </div>`;
+    if(!items.length){
+      html+='<div style="padding:18px;color:var(--brd);font-size:11px;text-align:center">Sin hitos</div>';
+    } else {
+      items.forEach(h=>{
+        const bc=h.cobrado?'rgba(16,185,129,.1)':'rgba(245,158,11,.07)';
+        const tc=h.cobrado?'var(--acc)':'var(--acc4)';
+        html+=`<div style="padding:9px 12px;border-bottom:1px solid rgba(30,45,69,.3);background:${bc}">
+          <div style="font-size:11px;font-weight:600;margin-bottom:2px">${h.hito}</div>
+          <div style="font-size:10px;color:var(--mid);margin-bottom:4px">📁 ${h.proyecto}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:${tc}">${fmt(h.monto)}</span>
+            <span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:${h.cobrado?'rgba(16,185,129,.15)':'rgba(245,158,11,.15)'};color:${tc}">${h.cobrado?'✓ Cobrado':'Pendiente'}</span>
+          </div>
+          ${h.fechaCobro?`<div style="font-size:9px;color:var(--dim);margin-top:2px">Cobrado: ${h.fechaCobro}</div>`:''}
+        </div>`;
+      });
+    }
+    html+='</div>';
+  }
+  html+='</div>';
+  cont.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════
+// KPIs
+// ═══════════════════════════════════════════════════════
+function calcKPIs(){
+  const total=proyectos.reduce((a,p)=>a+p.monto,0);
+  const cobrado=proyectos.reduce((a,p)=>a+Math.max(0,p.cobrado),0);
+  const porcob=proyectos.reduce((a,p)=>a+(p.monto-Math.max(0,p.cobrado)),0);
+  const mensual=proyectos.filter(p=>p.estatus==='Activo').reduce((a,p)=>a+p.cuota,0);
+  const durProm=proyectos.length?proyectos.reduce((a,p)=>a+p.meses,0)/proyectos.length:0;
+  return{total,cobrado,porcob,mensual,durProm};
+}
+function renderKPIs(){
+  const k=calcKPIs();
+  document.getElementById('k-total').textContent=fmt(k.total);
+  document.getElementById('k-total-n').textContent=proyectos.length+' proyectos en portafolio';
+  document.getElementById('k-cobrado').textContent=fmt(k.cobrado);
+  const pct=k.total>0?Math.min(100,(k.cobrado/k.total)*100):0;
+  document.getElementById('k-cob-bar').style.width=pct.toFixed(1)+'%';
+  document.getElementById('k-porcob').textContent=fmt(k.porcob);
+  document.getElementById('k-mensual').textContent=fmt(k.mensual);
+  document.getElementById('k-num').textContent=proyectos.length;
+  document.getElementById('k-dur').textContent='Duración promedio: '+k.durProm.toFixed(0)+' meses';
+}
+
+// ═══════════════════════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════════════════════
+function renderTable(){
+  const q=(document.getElementById('srch').value||'').toLowerCase();
+  const fd=document.getElementById('f-dur').value;
+  const ft=document.getElementById('f-tipo').value;
+  let rows=proyectos.filter((p,i)=>{
+    if(q&&!p.nombre.toLowerCase().includes(q)) return false;
+    if(fd&&String(p.meses)!==fd) return false;
+    if(ft&&p.tipo!==ft) return false;
+    return true;
+  }).map((p,_,arr)=>({p,i:proyectos.indexOf(p)}));
+
+  // SORTING
+  rows.sort((a,b)=>{
+    let va,vb;
+    if(_sortCol==='nombre'){va=a.p.nombre;vb=b.p.nombre;}
+    else if(_sortCol==='tipo'){va=a.p.tipo;vb=b.p.tipo;}
+    else if(_sortCol==='monto'){va=a.p.monto;vb=b.p.monto;}
+    else if(_sortCol==='cobrado'){va=Math.max(0,a.p.cobrado);vb=Math.max(0,b.p.cobrado);}
+    else if(_sortCol==='cuota'){va=a.p.cuota;vb=b.p.cuota;}
+    else if(_sortCol==='meses'){va=a.p.meses;vb=b.p.meses;}
+    else if(_sortCol==='avance'){va=pctAvance(a.p);vb=pctAvance(b.p);}
+    else if(_sortCol==='estatus'){va=a.p.estatus;vb=b.p.estatus;}
+    else {va=a.p.nombre;vb=b.p.nombre;}
+    if(typeof va==='string') return va.localeCompare(vb)*_sortDir;
+    return (va-vb)*_sortDir;
+  });
+
+  document.getElementById('cnt-badge').textContent=rows.length;
+  const total=rows.length; const pages=Math.ceil(total/PG_SIZE)||1;
+  pgIdx=Math.min(pgIdx,pages-1);
+  const slice=rows.slice(pgIdx*PG_SIZE,(pgIdx+1)*PG_SIZE);
+
+  const tbody=document.getElementById('tbody');
+  if(rows.length===0){
+    tbody.innerHTML=`<tr><td colspan="12" style="text-align:center;padding:40px;color:var(--dim)">
+      <div style="font-size:14px;margin-bottom:8px">📁 No hay proyectos en el portafolio</div>
+      <div style="font-size:11px;margin-bottom:14px">Usa <strong>Nuevo Proyecto</strong>, <strong>Carga Masiva</strong> o <strong>Restaurar Backup</strong> para comenzar</div>
+      <button class="btn btn-outline" onclick="cargarDemoData()" style="font-size:11px">⚡ Cargar datos de demo (${_DEMO_DATA.length} proyectos)</button>
+    </td></tr>`;
+    document.getElementById('pg-info').textContent='0 proyectos';
+    document.getElementById('pg-btns').innerHTML='';
+    return;
+  }
+  tbody.innerHTML=slice.map(({p,i})=>{
+    const porcob=p.monto-Math.max(0,p.cobrado);
+    const avance=pctAvance(p);
+    const fin=addMonths(p.inicio,p.meses);
+    const sc=estStatusColor(p.estatus);
+    const cobColor=p.cobrado<0?'style="color:var(--acc3)"':'style="color:var(--acc)"';
+    return `<tr onclick="editProyecto(${i})">
+      <td><strong>${p.nombre}</strong>${p.notas?`<div style="font-size:9.5px;color:var(--dim)">${p.notas}</div>`:''}
+      </td>
+      <td><span class="badge b-${p.tipo==='mensualidad'?'blue':'purple'}">${p.tipo==='mensualidad'?'Mensual':'%'}</span></td>
+      <td class="r mono">${fmt(p.monto)}</td>
+      <td class="r mono" ${cobColor}>${fmt(Math.max(0,p.cobrado))}</td>
+      <td class="r mono" style="color:var(--acc4)">${fmt(porcob)}</td>
+      <td class="r mono">${fmt(p.cuota)}</td>
+      <td class="r"><span class="badge b-blue">${p.meses}m</span></td>
+      <td class="mono" style="font-size:9.5px">${dateStr(p.inicio)}</td>
+      <td class="mono" style="font-size:9.5px">${dateStr(fin)}</td>
+      <td style="min-width:100px">
+        <div style="font-size:10px;font-weight:700;color:${avance>66?'#10B981':avance>33?'#F59E0B':'#3B82F6'};margin-bottom:2px">${avance.toFixed(1)}%</div>
+        <div class="pbar"><div class="pfill" style="width:${avance.toFixed(0)}%;background:${avance>66?'#10B981':avance>33?'#F59E0B':'#3B82F6'}"></div></div>
+        <div style="font-size:8.5px;color:var(--dim);margin-top:2px">${fmt(Math.max(0,p.cobrado))} / ${fmt(p.monto)}</div>
+      </td>
+      <td><span class="badge b-${sc}"><span class="dot dot-${sc}"></span>${p.estatus}</span></td>
+      <td style="white-space:nowrap">
+        <button onclick="event.stopPropagation();verProyecto(${i})" title="Ver detalle" style="display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--brd);background:transparent;color:var(--mid);margin-right:2px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Ver
+        </button>
+        <button onclick="event.stopPropagation();editProyecto(${i})" title="Editar" style="display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.1);color:#3B82F6;margin-right:2px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar
+        </button>
+        <button onclick="event.stopPropagation();exportProyecto(${i})" title="Exportar a Excel" style="display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid rgba(16,185,129,.4);background:rgba(16,185,129,.08);color:#10B981;">
+          📊
+        </button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // PAGINATION
+  document.getElementById('pg-info').textContent=`Mostrando ${slice.length} de ${total}`;
+  const pbtns=document.getElementById('pg-btns');
+  pbtns.innerHTML=Array.from({length:pages},(_,i)=>`<button class="pbtn${i===pgIdx?' act':''}" onclick="goPage(${i})">${i+1}</button>`).join('');
+}
+function goPage(i){ pgIdx=i; renderTable(); }
+
+// ═══════════════════════════════════════════════════════
+// FLUJO MENSUAL
+// ═══════════════════════════════════════════════════════
+function getFlujoYear(yr){
+  const meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const result=meses.map((_,mi)=>{
+    const total=proyectos.filter(p=>{
+      if(p.estatus==='Suspendido') return false;
+      const start=new Date(p.inicio+'T12:00:00');
+      const end=new Date(addMonths(p.inicio,p.meses)+'T12:00:00');
+      const d=new Date(yr,(mi),1);
+      return d>=start&&d<end;
+    }).reduce((a,p)=>a+p.cuota,0);
+    return total;
+  });
+  return result;
+}
+
+let chFlujo=null;
+function buildMonthRange(yr){
+  if(yr==='all'){
+    const months=[];
+    for(let y=2025;y<=2034;y++) for(let m=0;m<12;m++) months.push({y,m});
+    return months;
+  }
+  return Array.from({length:12},(_,m)=>({y:parseInt(yr),m}));
+}
+function renderFlujo(){
+  const yrVal=document.getElementById('f-year').value;
+  document.getElementById('flujo-yr').textContent=yrVal==='all'?'2026–2033':yrVal;
+  const MNAMES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const monthRange=buildMonthRange(yrVal);
+  const labels=monthRange.map(({y,m})=>MNAMES[m]+' '+String(y).slice(2));
+  const totals=monthRange.map(({y,m})=>proyectos.filter(p=>{
+    if(p.estatus==='Suspendido') return false;
+    const start=new Date(p.inicio+'T12:00:00');
+    const end=new Date(addMonths(p.inicio,p.meses)+'T12:00:00');
+    const d=new Date(y,m,1);
+    return d>=start&&d<end;
+  }).reduce((a,p)=>a+p.cuota,0));
+
+  if(chFlujo) chFlujo.destroy();
+  const ctx=document.getElementById('ch-flujo').getContext('2d');
+  chFlujo=new Chart(ctx,{type:'bar',data:{
+    labels,
+    datasets:[{label:'Ingreso Mensual',data:totals.map(v=>conv(v)),backgroundColor:'rgba(59,130,246,.7)',borderColor:'#3B82F6',borderWidth:1,borderRadius:3}]
+  },options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$ '+c.raw.toLocaleString('es-MX',{minimumFractionDigits:2})}}},scales:{y:{ticks:{callback:function(v){var a=Math.abs(v);if(a>=1e9)return'$ '+(v/1e9).toFixed(1)+'B';if(a>=1e6)return'$ '+(v/1e6).toFixed(1)+'M';if(a>=1e3)return'$ '+(v/1e3).toFixed(0)+'K';return'$ '+v.toFixed(0);}},grid:{color:'rgba(30,45,69,.6)'}},x:{grid:{display:false},ticks:{maxRotation:60}}}}});
+
+  // Tabla detalle — sticky first column, all months as columns
+  const activos=proyectos.filter(p=>p.estatus!=='Suspendido');
+  const thEl=document.getElementById('th-flujo');
+  thEl.innerHTML='<tr><th style="position:sticky;left:0;background:var(--sur2);min-width:160px">Proyecto</th>'+
+    labels.map(l=>'<th class="r" style="min-width:90px;font-size:9px">'+l+'</th>').join('')+
+    '<th class="r" style="min-width:100px">TOTAL</th></tr>';
+  const tbEl=document.getElementById('tb-flujo');
+  let grandTotal=0;
+  const colTotals=new Array(monthRange.length).fill(0);
+  const today=new Date();
+  const rows=activos.map(p=>{
+    const paymentsReceived=Math.max(0,Math.floor((p.cobrado||0)/p.cuota));
+    let monthIndexForProject=0;
+    const vals=monthRange.map(({y,m})=>{
+      const start=new Date(p.inicio+'T12:00:00');
+      const end=new Date(addMonths(p.inicio,p.meses)+'T12:00:00');
+      const d=new Date(y,m,1);
+      if(d>=start&&d<end){
+        const mi=monthIndexForProject++;
+        return {val:p.cuota,mi};
+      }
+      return {val:0,mi:-1};
+    });
+    vals.forEach(({val},i)=>colTotals[i]+=val);
+    const rowTotal=vals.reduce((a,{val})=>a+val,0);
+    grandTotal+=rowTotal;
+    if(rowTotal===0) return '';
+    return '<tr><td style="position:sticky;left:0;background:var(--sur);font-size:11px;font-weight:600">'+p.nombre+'</td>'+
+      vals.map(({val,mi})=>{
+        if(val<=0) return '<td class="r mono" style="font-size:9.5px;color:var(--brd)">—</td>';
+        const cellDate=new Date();
+        // Determinar si el mes ya pasó
+        const monthPast=mi>=0&&mi<paymentsReceived;
+        const monthFuture=mi>=0&&mi>=paymentsReceived;
+        // Color: verde si pagado, naranja si no pagado
+        let color='var(--txt)';
+        if(monthPast) color='var(--acc)';         // verde = cobrado
+        else if(monthFuture) color='var(--acc4)'; // naranja = pendiente
+        return '<td class="r mono" style="font-size:9.5px;color:'+color+'">'+
+          '$ '+conv(val).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})+'</td>';
+      }).join('')+
+      '<td class="r mono" style="font-weight:700;color:var(--acc2)">$ '+conv(rowTotal).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})+'</td></tr>';
+  });
+  rows.push('<tr style="background:rgba(59,130,246,.06)"><td style="position:sticky;left:0;background:rgba(59,130,246,.06);font-size:11px;font-weight:700;color:var(--acc2)">TOTAL</td>'+
+    colTotals.map(t=>'<td class="r mono" style="font-size:9.5px;color:var(--acc2);font-weight:600">'+
+      (t>0?'$ '+conv(t).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2}):'—')+'</td>').join('')+
+    '<td class="r mono" style="font-weight:700;color:var(--acc2)">$ '+conv(grandTotal).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})+'</td></tr>');
+  tbEl.innerHTML=rows.join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// HITOS — Rediseño completo
+// ═══════════════════════════════════════════════════════
+function renderHitos(){
+  const q=(document.getElementById('srch-hito').value||'').toLowerCase();
+  const filtrados=proyectos.filter(p=>!q||p.nombre.toLowerCase().includes(q));
+  const container=document.getElementById('hitos-container');
+  if(!filtrados.length){ container.innerHTML='<div style="color:var(--dim);text-align:center;padding:40px">No hay proyectos</div>'; return; }
+  container.innerHTML=filtrados.map((p,pi)=>{
+    const idx=proyectos.indexOf(p);
+    let hitos=[];
+    if(p.hitosCobranza&&p.hitosCobranza.length>0){
+      hitos=p.hitosCobranza.map((h,hi)=>({
+        num:hi+1, mes:'—', nombre:h.nombre||'Hito '+(hi+1),
+        fechaProg:h.fechaProg||'—', monto:h.montoSIVA||0,
+        montoCobrado:h.cobrado?(h.montoCobrado||h.montoSIVA||0):0,
+        fechaCobro:h.fechaCobro||'—', cobrado:h.cobrado, pct:h.pct
+      }));
+    } else if(p.tipo==='mensualidad'){
+      hitos=Array.from({length:p.meses},(_,m)=>{
+        const fecha=addMonths(p.inicio,m);
+        const paymentsReceived=Math.max(0,Math.floor((p.cobrado||0)/p.cuota));
+        const cobrado=m<paymentsReceived;
+        return {
+          num:m+1, mes:dateStr(fecha), nombre:'Mensualidad '+(m+1),
+          fechaProg:fecha, monto:p.cuota,
+          montoCobrado:cobrado?p.cuota:0, fechaCobro:'—', cobrado, pct:null
+        };
+      });
+    }
+    const totalCob=hitos.reduce((a,h)=>a+(h.cobrado?h.montoCobrado:0),0);
+    const mesesPag=hitos.filter(h=>h.cobrado).length;
+    const mesesPend=hitos.filter(h=>!h.cobrado).length;
+    const adeudo=hitos.reduce((a,h)=>a+(!h.cobrado?h.monto:0),0);
+    const tipoTag=p.hitosCobranza&&p.hitosCobranza.length>0?
+      `<span class="badge b-blue">${p.hitosCobranza.length} hitos registrados</span>`:
+      `<span class="badge b-blue">${p.meses} mensualidades</span>`;
+    const rows=hitos.map(h=>{
+      const estCls=h.cobrado?'b-green':'b-amber';
+      const estTxt=h.cobrado?'✓ Cobrado':'Pendiente';
+      return `<tr style="border-bottom:1px solid rgba(30,45,69,.35)">
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);white-space:nowrap">${h.mes!=='—'?h.mes:h.num}</td>
+        <td style="padding:6px 10px;font-size:11px;font-weight:600">${h.nombre}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);white-space:nowrap">${h.fechaProg}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10.5px;text-align:right;white-space:nowrap">${fmt(h.monto)}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10.5px;text-align:right;color:${h.cobrado?'var(--acc)':'var(--dim)'};white-space:nowrap">${h.cobrado?fmt(h.montoCobrado):'—'}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);white-space:nowrap">${h.fechaCobro}</td>
+        <td style="padding:6px 10px"><span class="badge ${estCls}">${estTxt}</span></td>
+      </tr>`;
+    }).join('');
+    const pctCob=p.monto>0?Math.min(100,(totalCob/p.monto)*100):0;
+    return `<div class="tbl-wrap" style="margin-bottom:16px">
+      <div class="hm-proj-header">
+        <div class="hm-proj-top">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="hm-proj-name">${p.nombre}</div>
+            ${tipoTag}
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button onclick="exportProyecto(${idx})" style="font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid rgba(16,185,129,.4);background:rgba(16,185,129,.08);color:#10B981;cursor:pointer;font-weight:600" title="Exportar a Excel">📊 Excel</button>
+            <button onclick="editProyecto(${idx})" style="font-size:10px;padding:4px 10px;border-radius:6px;border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.1);color:#3B82F6;cursor:pointer;font-weight:600">✏️ Editar</button>
+          </div>
+        </div>
+        <div class="hm-proj-stats">
+          <div class="hm-stat">
+            <div class="hm-stat-lbl">Total Cobrado</div>
+            <div class="hm-stat-val" style="color:var(--acc)">${fmt(totalCob)}</div>
+          </div>
+          <div class="hm-stat">
+            <div class="hm-stat-lbl">Meses / Hitos Pagados</div>
+            <div class="hm-stat-val" style="color:var(--acc)">${mesesPag} <span style="font-size:10px;color:var(--dim);font-weight:400">de ${hitos.length}</span></div>
+          </div>
+          <div class="hm-stat">
+            <div class="hm-stat-lbl">Adeudo Pendiente</div>
+            <div class="hm-stat-val" style="color:var(--acc4)">${fmt(adeudo)}</div>
+          </div>
+          <div class="hm-stat">
+            <div class="hm-stat-lbl">Meses / Hitos Faltantes</div>
+            <div class="hm-stat-val" style="color:var(--acc4)">${mesesPend}</div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--dim);margin-bottom:4px">
+            <span>Avance de Cobranza</span><span style="font-weight:700;color:${pctCob>66?'var(--acc)':pctCob>33?'var(--acc4)':'var(--acc2)'}">${pctCob.toFixed(1)}%</span>
+          </div>
+          <div style="height:6px;background:var(--brd);border-radius:3px">
+            <div style="height:100%;border-radius:3px;width:${Math.min(pctCob,100).toFixed(1)}%;background:${pctCob>66?'#10B981':pctCob>33?'#F59E0B':'#3B82F6'};transition:width .4s"></div>
+          </div>
+        </div>
+      </div>
+      <div style="max-height:320px;overflow-y:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead><tr style="background:var(--sur2);position:sticky;top:0;z-index:1">
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700;white-space:nowrap">Mes / #</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700"># Mensualidad / Nombre</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700;white-space:nowrap">Fecha Prog. Cobro</th>
+            <th style="padding:6px 10px;text-align:right;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Monto a Cobrar</th>
+            <th style="padding:6px 10px;text-align:right;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Monto Pagado</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700;white-space:nowrap">Fecha de Pago</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Estatus</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// CHARTS RESUMEN
+// ═══════════════════════════════════════════════════════
+let chBar=null,chDonut=null,chLine=null,chDur=null;
+function renderCharts(){
+  const sorted=[...proyectos].sort((a,b)=>b.monto-a.monto).slice(0,15);
+  const COLORS=['#3B82F6','#10B981','#8B5CF6','#F59E0B','#EF4444','#06B6D4','#EC4899','#84CC16','#F97316','#6366F1','#14B8A6','#A855F7','#22C55E','#EAB308','#64748B'];
+
+  // BAR — Cobrado vs Pendiente por proyecto
+  if(chBar) chBar.destroy();
+  chBar=new Chart(document.getElementById('ch-bar').getContext('2d'),{type:'bar',data:{
+    labels:sorted.map(p=>p.nombre.length>20?p.nombre.slice(0,20)+'…':p.nombre),
+    datasets:[
+      {label:'Cobrado',data:sorted.map(p=>conv(Math.max(0,p.cobrado))),backgroundColor:'#10B981',borderRadius:3,stack:'s'},
+      {label:'Pendiente',data:sorted.map(p=>conv(Math.max(0,p.monto-Math.max(0,p.cobrado)))),backgroundColor:'rgba(245,158,11,.7)',borderRadius:3,stack:'s'}
+    ]
+  },options:{responsive:true,indexAxis:'y',plugins:{
+    legend:{labels:{color:'#94A3B8',font:{size:11}},position:'bottom'},
+    tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${curMode==='USD'?'USD ':'$\u202F'}${c.raw.toLocaleString('es-MX',{minimumFractionDigits:2})}`}}
+  },scales:{x:{stacked:true,ticks:{callback:function(v){var a=Math.abs(v);if(a>=1e9)return'$'+(v/1e9).toFixed(1)+'B';if(a>=1e6)return'$'+(v/1e6).toFixed(1)+'M';if(a>=1e3)return'$'+(v/1e3).toFixed(0)+'K';return'$'+v.toFixed(0);}},grid:{color:'rgba(30,45,69,.4)'}},y:{stacked:true,grid:{display:false},ticks:{color:'#94A3B8',font:{size:10}}}}
+  }});
+
+  // DONUT
+  const totalCob=proyectos.reduce((a,p)=>a+Math.max(0,p.cobrado),0);
+  const totalPen=proyectos.reduce((a,p)=>a+(p.monto-Math.max(0,p.cobrado)),0);
+  if(chDonut) chDonut.destroy();
+  chDonut=new Chart(document.getElementById('ch-donut').getContext('2d'),{type:'doughnut',data:{
+    labels:['Cobrado','Por Cobrar'],
+    datasets:[{data:[conv(totalCob),conv(totalPen)],backgroundColor:['#10B981','#3B82F6'],borderWidth:0,hoverOffset:8}]
+  },options:{responsive:true,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:'#94A3B8',font:{size:11},boxWidth:10}}}}});
+
+  // LINE — flujo anual
+  const years=[2026,2027,2028,2029,2030,2031,2032,2033];
+  const anuales=years.map(yr=>getFlujoYear(yr).reduce((a,v)=>a+v,0));
+  if(chLine) chLine.destroy();
+  chLine=new Chart(document.getElementById('ch-line').getContext('2d'),{type:'line',data:{
+    labels:years.map(String),
+    datasets:[{label:'Flujo Anual',data:anuales.map(v=>conv(v)),borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,.1)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#3B82F6'}]
+  },options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${curMode==='USD'?'USD ':'$\u202F'}${c.raw.toLocaleString('es-MX',{minimumFractionDigits:0})}`}}},scales:{y:{ticks:{callback:v=>(v/1000000).toFixed(1)+'M'},grid:{color:'rgba(30,45,69,.6)'}},x:{grid:{display:false}}}}});
+
+  // DUR
+  const durMap={};
+  proyectos.forEach(p=>{const k=p.meses+'m'; durMap[k]=(durMap[k]||0)+1;});
+  const dkeys=Object.keys(durMap).sort((a,b)=>parseInt(a)-parseInt(b));
+  if(chDur) chDur.destroy();
+  chDur=new Chart(document.getElementById('ch-dur').getContext('2d'),{type:'bar',data:{
+    labels:dkeys,
+    datasets:[{label:'Proyectos',data:dkeys.map(k=>durMap[k]),backgroundColor:COLORS,borderRadius:5}]
+  },options:{responsive:true,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        callbacks:{
+          title:function(items){return items[0].label;},
+          label:function(ctx){return ctx.raw+' proyecto'+(ctx.raw!==1?'s':'');},
+          afterLabel:function(ctx){
+            const dur=parseInt(ctx.label);
+            return proyectos.filter(p=>p.meses===dur).map(p=>'  • '+p.nombre);
+          }
+        }
+      }
+    },
+    scales:{y:{ticks:{stepSize:1},grid:{color:'rgba(30,45,69,.6)'}},x:{grid:{display:false}}}}});
+}
+
+// ═══════════════════════════════════════════════════════
+// REFRESH ALL
+// ═══════════════════════════════════════════════════════
+function refreshAll(){
+  renderKPIs();
+  renderCharts();
+  renderTable();
+}
+
+// ═══════════════════════════════════════════════════════
+// VER PROYECTO (solo lectura)
+// ═══════════════════════════════════════════════════════
+function verProyecto(i){
+  const p=proyectos[i];
+  const porcob=p.monto-Math.max(0,p.cobrado);
+  const avance=pctAvance(p);
+  const fin=addMonths(p.inicio,p.meses);
+  const sc=estStatusColor(p.estatus);
+  document.getElementById('v-title').textContent=p.nombre;
+
+  // Construir tabla de hitos si existen
+  let hitosSection='';
+  if(p.hitosCobranza&&p.hitosCobranza.length>0){
+    const cobTot=p.hitosCobranza.filter(h=>h.cobrado).reduce((a,h)=>a+(h.montoCobrado||0),0);
+    const hitosRows=p.hitosCobranza.map(h=>{
+      const badgeCls=h.cobrado?'b-green':'b-amber';
+      const badgeTxt=h.cobrado?'✓ Pagado':'Pendiente';
+      const montoColor=h.cobrado?'var(--acc)':'var(--dim)';
+      return `<tr style="border-bottom:1px solid rgba(30,45,69,.5);font-size:11px">
+        <td style="padding:6px 10px;font-weight:600">${h.nombre||'—'}</td>
+        <td style="padding:6px 10px;text-align:center;color:var(--acc5)">${h.pct?h.pct+'%':'—'}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10.5px">${h.montoSIVA?fmt(h.montoSIVA):'—'}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)">${h.fechaProg||'—'}</td>
+        <td style="padding:6px 10px"><span class="badge ${badgeCls}">${badgeTxt}</span></td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10.5px;color:${montoColor}">${h.cobrado&&h.montoCobrado?fmt(h.montoCobrado):'—'}</td>
+        <td style="padding:6px 10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--dim)">${h.fechaCobro||'—'}</td>
+      </tr>`;
+    }).join('');
+    hitosSection=`
+    <div style="margin-bottom:12px">
+      <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;font-weight:700">🎯 Hitos / Mensualidades de Cobranza</div>
+      <div style="overflow-x:auto;border:1px solid var(--brd);border-radius:8px">
+        <table style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead><tr style="background:var(--sur2)">
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Nombre</th>
+            <th style="padding:6px 10px;text-align:center;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">%</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Monto S/IVA</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Fecha Prog.</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Estatus</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Monto Cobrado</th>
+            <th style="padding:6px 10px;text-align:left;font-size:9px;color:var(--dim);text-transform:uppercase;font-weight:700">Fecha Cobro</th>
+          </tr></thead>
+          <tbody>${hitosRows}</tbody>
+        </table>
+      </div>
+      <div style="font-size:10px;color:var(--mid);margin-top:6px;text-align:right">Total cobrado en hitos: <span style="color:var(--acc);font-family:'DM Mono',monospace;font-weight:700">${fmt(cobTot)}</span></div>
+    </div>`;
+  }
+
+  document.getElementById('v-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--sur2);border-radius:8px;padding:12px"><div style="font-size:9px;color:var(--dim);text-transform:uppercase;margin-bottom:4px">Monto Contrato</div><div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--acc2)">${fmt(p.monto)}</div></div>
+      <div style="background:var(--sur2);border-radius:8px;padding:12px"><div style="font-size:9px;color:var(--dim);text-transform:uppercase;margin-bottom:4px">Cobrado</div><div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--acc)">${fmt(Math.max(0,p.cobrado))}</div></div>
+      <div style="background:var(--sur2);border-radius:8px;padding:12px"><div style="font-size:9px;color:var(--dim);text-transform:uppercase;margin-bottom:4px">Por Cobrar</div><div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--acc4)">${fmt(porcob)}</div></div>
+      <div style="background:var(--sur2);border-radius:8px;padding:12px"><div style="font-size:9px;color:var(--dim);text-transform:uppercase;margin-bottom:4px">Cuota Mensual</div><div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--mid)">${fmt(p.cuota)}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;font-size:11px">
+      <div><span style="color:var(--dim)">Tipo:</span> <strong>${p.tipo}</strong></div>
+      <div><span style="color:var(--dim)">Plazo:</span> <strong>${p.meses} meses</strong></div>
+      <div><span style="color:var(--dim)">Estatus:</span> <strong>${p.estatus}</strong></div>
+      <div><span style="color:var(--dim)">Inicio:</span> <strong>${dateStr(p.inicio)}</strong></div>
+      <div><span style="color:var(--dim)">Fin:</span> <strong>${dateStr(fin)}</strong></div>
+      <div><span style="color:var(--dim)">Avance:</span> <strong>${avance.toFixed(1)}%</strong></div>
+    </div>
+    <div style="margin-bottom:12px"><div style="font-size:9px;color:var(--dim);margin-bottom:5px">AVANCE DE COBRANZA</div>
+      <div style="height:8px;background:var(--brd);border-radius:4px"><div style="height:100%;border-radius:4px;background:${avance>66?'#10B981':avance>33?'#F59E0B':'#3B82F6'};width:${Math.min(avance,100).toFixed(0)}%"></div></div>
+    </div>
+    ${p.firma||p.anticipo||p.fechaMensualidad?`
+    <div style='background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:8px;padding:12px;margin-bottom:12px;font-size:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px'>
+      ${p.firma?"<div><span style='color:var(--dim)'>Firma de Contrato:</span> <strong>"+p.firma+"</strong></div>":''}
+      ${p.anticipo?"<div><span style='color:var(--dim)'>Anticipo:</span> <strong style='color:var(--acc)'>"+fmt(p.anticipo)+"</strong></div>":''}
+      ${p.fechaAnticipo?"<div><span style='color:var(--dim)'>Fecha Pago Anticipo:</span> <strong>"+p.fechaAnticipo+"</strong></div>":''}
+      ${p.fechaMensualidad?"<div><span style='color:var(--acc4)'>Último Pago Mensualidad:</span> <strong>"+p.fechaMensualidad+"</strong></div>":''}
+    </div>`:''}
+    ${hitosSection}
+    ${p.notas?'<div style="background:var(--sur2);border-radius:8px;padding:10px;font-size:11px;color:var(--mid);margin-bottom:12px"><strong style="color:var(--txt)">Notas:</strong> '+p.notas+'</div>':''}
+    <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal('m-view')">Cerrar</button>
+      <button class="btn btn-primary" onclick="closeModal('m-view');editProyecto(${i})">✏️ Editar</button>
+    </div>`;
+  openModal('m-view');
+}
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  const d=new Date();
+  document.getElementById('hdate').textContent=d.toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'});
+  document.getElementById('np-inicio').valueAsDate=new Date();
+  document.getElementById('f-year').value='all'; // mostrar todos los años por default
+  loadCloud().then(()=>refreshAll()).catch(()=>refreshAll());
+  // Auto-refresh cada 45s para mantener datos sincronizados entre dispositivos
+  setInterval(()=>{
+    loadCloud().then(()=>refreshAll()).catch(()=>{});
+  }, 45000);
+});
+</script>
+</body>
+</html>
